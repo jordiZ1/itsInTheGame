@@ -13,6 +13,7 @@ public class BasicGame implements GameLoop {
     @Override
     public void init() {
         SaxionApp.printLine("test");
+        SaxionApp.printLine("gfruy");
     }
 
     @Override
