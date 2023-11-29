@@ -7,7 +7,7 @@ import nl.saxion.app.interaction.MouseEvent;
 public class BasicGame implements GameLoop {
 
     public static void main(String[] args) {
-        SaxionApp.startGameLoop(new BasicGame(), 1000, 1000, 40);
+        SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
     }
 
     @Override
