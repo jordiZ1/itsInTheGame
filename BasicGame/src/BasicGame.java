@@ -15,6 +15,7 @@ public class BasicGame implements GameLoop {
         SaxionApp.printLine("test");
         SaxionApp.printLine("gfruy");
         SaxionApp.printLine("Hamburger.");
+        SaxionApp.printLine("test git");
     }
 
     @Override
