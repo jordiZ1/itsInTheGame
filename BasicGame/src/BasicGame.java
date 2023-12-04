@@ -24,13 +24,13 @@ public class BasicGame implements GameLoop {
     public void loop() {
         SaxionApp.drawImage("BasicGame/BattleArena1.jpg", 0,0, 1500, 750);
 
-        SaxionApp.drawImage("BasicGame/neonRedCircle.png",130,580,110,200);
-        SaxionApp.drawImage("BasicGame/neonRedCircle.png",250,580,110,200);
-        SaxionApp.drawImage("BasicGame/neonRedCircle.png",370,580,110,200);
+        SaxionApp.drawImage("BasicGame/redAbility.png",130,580,110,200);
+        SaxionApp.drawImage("BasicGame/greenAbility.png",250,640,135,80);
+        SaxionApp.drawImage("BasicGame/blueAbility.png",395,640,110,80);
 
-        SaxionApp.drawImage("BasicGame/neonRedCircle.png",1260,580,110,200);
-        SaxionApp.drawImage("BasicGame/neonRedCircle.png",1140,580,110,200);
-        SaxionApp.drawImage("BasicGame/neonRedCircle.png",1020,580,110,200);
+        SaxionApp.drawImage("BasicGame/redAbility.png",1260,580,110,200);
+        SaxionApp.drawImage("BasicGame/greenAbility.png",1120,640,135,80);
+        SaxionApp.drawImage("BasicGame/blueAbility.png",1000,640,110,80);
 
         SaxionApp.drawImage("BasicGame/healthBar.png",200,-50,360,190);
         SaxionApp.drawImage("BasicGame/healthBar.png",920,-50,360,190);
