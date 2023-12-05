@@ -11,9 +11,6 @@ public class BasicGame implements GameLoop {
         SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
     }
 
-
-
-
     @Override
     public void init() {
 
