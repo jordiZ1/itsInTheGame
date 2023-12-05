@@ -53,9 +53,3 @@ public class BasicGame implements GameLoop {
         return players.get(1);
     }
 }
-
-
-
-
-
-
