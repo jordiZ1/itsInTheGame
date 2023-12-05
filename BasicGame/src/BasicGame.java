@@ -4,6 +4,7 @@ import nl.saxion.app.interaction.GameLoop;
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 
+import java.util.ArrayList;
 
 public class BasicGame implements GameLoop {
 
@@ -11,13 +12,49 @@ public class BasicGame implements GameLoop {
         SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
     }
 
+    ArrayList<String> players = new ArrayList<>();
+    int turn;
+
     @Override
     public void init() {
-
+        turn = 1;
+        players.add("Player 1");
+        players.add("Player 2");
     }
 
     @Override
     public void loop() {
+        drawGameBoard();
+
+        String currentPlayer = getCurrentPlayer();
+
+        SaxionApp.drawText("Turn: " + turn, 80, 80, 20);
+        SaxionApp.drawText(currentPlayer, 100, 100, 20);
+
+        SaxionApp.sleep(2);
+
+        turn++;
+    }
+
+    @Override
+    public void keyboardEvent(KeyboardEvent keyboardEvent) {
+
+    }
+
+    @Override
+    public void mouseEvent(MouseEvent mouseEvent) {
+
+    }
+
+    private String getCurrentPlayer() {
+        if (turn % 2 == 1) {
+            return players.get(0);
+        }
+
+        return players.get(1);
+    }
+
+    private void drawGameBoard() {
         SaxionApp.clear();
         SaxionApp.drawImage("BasicGame/BattleArena1.jpg", 0,0, 1500, 750);
 
@@ -39,17 +76,5 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/redCard.png",1370,130,80,120);
         SaxionApp.drawImage("BasicGame/greenCard.png",1370,320,80,120);
         SaxionApp.drawImage("BasicGame/blueCard.png",1370,510,80,120);
-
-
-    }
-
-    @Override
-    public void keyboardEvent(KeyboardEvent keyboardEvent) {
-
-    }
-
-    @Override
-    public void mouseEvent(MouseEvent mouseEvent) {
-
     }
 }
