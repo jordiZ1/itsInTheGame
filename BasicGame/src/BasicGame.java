@@ -18,6 +18,7 @@ public class BasicGame implements GameLoop {
 
     @Override
     public void loop() {
+        SaxionApp.clear();
         SaxionApp.drawImage("BasicGame/BattleArena1.jpg", 0,0, 1500, 750);
 
         SaxionApp.drawImage("BasicGame/redAbility.png",130,580,110,200);
