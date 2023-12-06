@@ -12,6 +12,9 @@ public class BasicGame implements GameLoop {
         SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
     }
 
+    God dummy = new God();
+    God dummy2 = new God();
+
     ArrayList<String> players = new ArrayList<>();
     int turn;
 
@@ -20,6 +23,17 @@ public class BasicGame implements GameLoop {
         turn = 1;
         players.add("Player 1");
         players.add("Player 2");
+
+        dummy.characterId = 1;
+        dummy.hp = 100;
+        dummy.name = "Zeus";
+        dummy.abilityDamage1 = 20;
+
+        dummy2.characterId = 2;
+        dummy2.hp = 100;
+        dummy2.name = "Odin";
+        dummy2.abilityDamage1 = 25;
+
     }
 
     @Override
@@ -27,6 +41,10 @@ public class BasicGame implements GameLoop {
         drawGameBoard();
 
         String currentPlayer = getCurrentPlayer();
+        SaxionApp.drawText(dummy.name, 100, 100, 50);
+        SaxionApp.drawText(String.valueOf(dummy.hp),100,200,50);
+        SaxionApp.drawText(dummy2.name, 1300, 100,50);
+        SaxionApp.drawText(String.valueOf(dummy2.hp),1300,200,50);
 
         SaxionApp.drawText("Turn: " + turn, 80, 80, 20);
         SaxionApp.drawText(currentPlayer, 100, 100, 20);
