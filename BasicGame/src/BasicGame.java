@@ -5,6 +5,7 @@ import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class BasicGame implements GameLoop {
 
@@ -12,17 +13,13 @@ public class BasicGame implements GameLoop {
         SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
     }
 
-    God dummy = new God();
-    God dummy2 = new God();
-
-    ArrayList<String> players = new ArrayList<>();
+    ArrayList<Player> players = new ArrayList<>();
     int turn;
 
     @Override
     public void init() {
-        turn = 1;
-        players.add("Player 1");
-        players.add("Player 2");
+        God dummy = new God();
+        God dummy2 = new God();
 
         dummy.characterId = 1;
         dummy.hp = 100;
@@ -34,24 +31,44 @@ public class BasicGame implements GameLoop {
         dummy2.name = "Odin";
         dummy2.abilityDamage1 = 25;
 
+        Player player1 = new Player();
+        Player player2 = new Player();
+
+        player1.id = 1;
+        player1.name = "Speler 1";
+        player1.cards.add(dummy);
+        player1.activeCard = 0;
+
+        player2.id = 2;
+        player2.name = "Speler 2";
+        player2.cards.add(dummy2);
+        player2.activeCard = 0;
+
+        players.add(player1);
+        players.add(player2);
+
+        turn = 1;
     }
 
     @Override
     public void loop() {
         drawGameBoard();
+        Player player1 = players.get(0);
+        Player player2 = players.get(1);
 
-        String currentPlayer = getCurrentPlayer();
-        SaxionApp.drawText(dummy.name, 100, 100, 50);
-        SaxionApp.drawText(String.valueOf(dummy.hp),100,200,50);
-        SaxionApp.drawText(dummy2.name, 1300, 100,50);
-        SaxionApp.drawText(String.valueOf(dummy2.hp),1300,200,50);
+        Player currentPlayer = getCurrentPlayer();
+        SaxionApp.drawText(player1.cards.get(player1.activeCard).name, 100, 100, 50);
+        SaxionApp.drawText(String.valueOf(player1.cards.get(player1.activeCard).hp),100,200,50);
+        SaxionApp.drawText(player2.cards.get(player2.activeCard).name, 1300, 100,50);
+        SaxionApp.drawText(String.valueOf(player2.cards.get(player2.activeCard).hp),1300,200,50);
 
         SaxionApp.drawText("Turn: " + turn, 80, 80, 20);
-        SaxionApp.drawText(currentPlayer, 100, 100, 20);
+        SaxionApp.drawText(currentPlayer.name, 100, 100, 20);
 
         SaxionApp.sleep(2);
 
         turn++;
+        reversePlayersList();
     }
 
     @Override
@@ -64,12 +81,21 @@ public class BasicGame implements GameLoop {
 
     }
 
-    private String getCurrentPlayer() {
-        if (turn % 2 == 1) {
-            return players.get(0);
-        }
+    private Player getCurrentPlayer() {
+        return players.get(0);
+//        if (turn % 2 == 1) {
+//            return player1;
+//        }
+//
+//        return player2;
+    }
 
-        return players.get(1);
+    private void reversePlayersList() {
+        Collections.reverse(players);
+    }
+
+    private void doAttack() {
+
     }
 
     private void drawGameBoard() {
