@@ -15,7 +15,6 @@ public class BasicGame implements GameLoop {
     God dummy = new God();
     God dummy2 = new God();
 
-
     ArrayList<String> players = new ArrayList<>();
     int turn;
 
