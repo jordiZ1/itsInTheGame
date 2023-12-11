@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class BasicGame implements GameLoop {
 
-    //private int remainingHealth = 360;
+    private int remainingHealth = 360;
     public static void main(String[] args) {SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
     }
 
@@ -21,23 +21,28 @@ public class BasicGame implements GameLoop {
     boolean turnPlayer1;
     boolean turnPlayer2 = false;
 
+    boolean gameActive;
+
     @Override
     public void init() {
         turn = 1;
         turnPlayer1 = true;
         turnPlayer2 = false;
 
+        gameActive = true;
+
+
         players.add("Player 1");
         players.add("Player 2");
 
         dummy.characterId = 1;
         dummy.hp = 100;
-        dummy.name = "Zeus";
+        dummy.name = "Dummy 1";
         dummy.abilityDamage1 = 20;
 
         dummy2.characterId = 2;
         dummy2.hp = 100;
-        dummy2.name = "Odin";
+        dummy2.name = "Dummy 2";
         dummy2.abilityDamage1 = 25;
 
     }
@@ -49,18 +54,30 @@ public class BasicGame implements GameLoop {
 
         String currentPlayer = getCurrentPlayer();
 
-        SaxionApp.drawText(dummy.name, 100, 100, 50);
-        SaxionApp.drawText(String.valueOf(dummy.hp),100,200,50);
-        SaxionApp.drawText(dummy2.name, 1300, 100,50);
-        SaxionApp.drawText(String.valueOf(dummy2.hp),1300,200,50);
+        // Draws Dummy HP and names
+        SaxionApp.drawText(dummy.name, 300, 100, 50);
+        SaxionApp.drawText(String.valueOf(dummy.hp),300,200,50);
+        SaxionApp.drawText(dummy2.name, 1000, 100,50);
+        SaxionApp.drawText(String.valueOf(dummy2.hp),1000,200,50);
 
-        SaxionApp.drawText("Turn: " + turn, 80, 80, 20);
-        SaxionApp.drawText(currentPlayer, 100, 100, 20);
+        SaxionApp.drawText("Turn: " + turn, 700, 80, 20);
+        SaxionApp.drawText(currentPlayer, 700, 100, 20);
+
+        if (dummy.hp == 0 || dummy2.hp == 0){
+            gameActive = false;
+            SaxionApp.drawBorderedText("GAME OVER", 600, 375, 50);
+            if (dummy.hp == 0){
+                SaxionApp.drawBorderedText(dummy2.name + " Wins!", 650, 425, 30);
+            }
+            else if (dummy2.hp == 0){
+                SaxionApp.drawBorderedText(dummy.name + " Wins!", 650, 425, 30);
+            }
+        }
     }
 
     @Override
     public void keyboardEvent(KeyboardEvent keyboardEvent) {
-        if (turnPlayer1) {
+        if (turnPlayer1 && gameActive) {
             if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Q) {
                 dummy2.hp = dummy2.hp - dummy.abilityDamage1;
                 turnPlayer2 = true;
@@ -69,7 +86,7 @@ public class BasicGame implements GameLoop {
             }
         }
 
-        else if (turnPlayer2){
+        else if (turnPlayer2 && gameActive){
             if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Z) {
                 dummy.hp = dummy.hp - dummy2.abilityDamage1;
                 turnPlayer1 = true;
@@ -108,15 +125,13 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/blueAbility.png",995,640,110,80);
 
 
-        SaxionApp.drawImage("BasicGame/healthBar.png",200,-50,360,190);
-        SaxionApp.drawImage("BasicGame/healthBar.png",920,-50,360,190);
 
-        /*SaxionApp.drawImage("BasicGame/healthBar.png",200,35,remainingHealth,35);
+        SaxionApp.drawImage("BasicGame/healthBar.png",200,35,remainingHealth,35);
         SaxionApp.turnBorderOff();
         SaxionApp.setFill(Color.green);
         SaxionApp.drawRectangle(227,49,313,12);
 
-        //SaxionApp.drawImage("BasicGame/healthBar.png",920,35,remainingHealth,35);
+        SaxionApp.drawImage("BasicGame/healthBar.png",920,35,remainingHealth,35);
         SaxionApp.turnBorderOff();
         SaxionApp.setFill(Color.green);
         SaxionApp.drawRectangle(947,49,313,12);//*/
