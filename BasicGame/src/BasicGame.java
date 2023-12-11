@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 public class BasicGame implements GameLoop {
 
-    private int remainingHealth = 360;
     public static void main(String[] args) {SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
     }
 
@@ -38,12 +37,16 @@ public class BasicGame implements GameLoop {
         dummy.characterId = 1;
         dummy.hp = 100;
         dummy.name = "Dummy 1";
-        dummy.abilityDamage1 = 20;
+        dummy.abilityDamage1 = 15;
+        dummy.abilityDamage2 = 20;
+        dummy.abilityDamage3 = 25;
 
         dummy2.characterId = 2;
         dummy2.hp = 100;
         dummy2.name = "Dummy 2";
         dummy2.abilityDamage1 = 25;
+        dummy2.abilityDamage2 = 15;
+        dummy2.abilityDamage3 = 10;
 
     }
 
@@ -84,10 +87,35 @@ public class BasicGame implements GameLoop {
                 turnPlayer1 = false;
                 turn++;
             }
+            if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_W) {
+                dummy2.hp = dummy2.hp - dummy.abilityDamage2;
+                turnPlayer2 = true;
+                turnPlayer1 = false;
+                turn++;
+            }
+            if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_E) {
+                dummy2.hp = dummy2.hp - dummy.abilityDamage3;
+                turnPlayer2 = true;
+                turnPlayer1 = false;
+                turn++;
+            }
         }
+
 
         else if (turnPlayer2 && gameActive){
             if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Z) {
+                dummy.hp = dummy.hp - dummy2.abilityDamage1;
+                turnPlayer1 = true;
+                turnPlayer2 = false;
+                turn++;
+            }
+            if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_X) {
+                dummy.hp = dummy.hp - dummy2.abilityDamage1;
+                turnPlayer1 = true;
+                turnPlayer2 = false;
+                turn++;
+            }
+            if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_C) {
                 dummy.hp = dummy.hp - dummy2.abilityDamage1;
                 turnPlayer1 = true;
                 turnPlayer2 = false;
@@ -126,15 +154,15 @@ public class BasicGame implements GameLoop {
 
 
 
-        SaxionApp.drawImage("BasicGame/healthBar.png",200,35,remainingHealth,35);
+        SaxionApp.drawImage("BasicGame/healthBar.png",200,35,345,35);
         SaxionApp.turnBorderOff();
         SaxionApp.setFill(Color.green);
-        SaxionApp.drawRectangle(227,49,313,12);
+        SaxionApp.drawRectangle(227,49,getHealthBarWidth(dummy.hp),12);
 
-        SaxionApp.drawImage("BasicGame/healthBar.png",920,35,remainingHealth,35);
+        SaxionApp.drawImage("BasicGame/healthBar.png",920,35,345,35);
         SaxionApp.turnBorderOff();
         SaxionApp.setFill(Color.green);
-        SaxionApp.drawRectangle(947,49,313,12);//*/
+        SaxionApp.drawRectangle(947,49,getHealthBarWidth(dummy2.hp),12);//*/
 
         SaxionApp.drawImage("BasicGame/redCard.png",50,130,80,120);
         SaxionApp.drawImage("BasicGame/greenCard.png/",50,320,80,120);
@@ -148,5 +176,11 @@ public class BasicGame implements GameLoop {
     private void characters () {
         SaxionApp.drawImage("BasicGame/dummy1.png",1100,390,150,230);
         SaxionApp.drawImage("BasicGame/dummy2.png",280,385,200,240);
+    }
+
+    public int getHealthBarWidth(int hp){
+        double width = ( (double) hp /100) * 300;
+        return (int) width;
+
     }
 }
