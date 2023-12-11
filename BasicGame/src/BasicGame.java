@@ -4,15 +4,13 @@ import nl.saxion.app.interaction.GameLoop;
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 
-
-
 import java.awt.*;
 import java.util.ArrayList;
 
 public class BasicGame implements GameLoop {
 
-    public static void main(String[] args) {
-        SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
+    //private int remainingHealth = 360;
+    public static void main(String[] args) {SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
     }
 
     God dummy = new God();
@@ -25,8 +23,6 @@ public class BasicGame implements GameLoop {
 
     @Override
     public void init() {
-
-
         turn = 1;
         turnPlayer1 = true;
         turnPlayer2 = false;
@@ -49,6 +45,7 @@ public class BasicGame implements GameLoop {
     @Override
     public void loop() {
         drawGameBoard();
+        characters();
 
         String currentPlayer = getCurrentPlayer();
 
@@ -59,9 +56,6 @@ public class BasicGame implements GameLoop {
 
         SaxionApp.drawText("Turn: " + turn, 80, 80, 20);
         SaxionApp.drawText(currentPlayer, 100, 100, 20);
-
-
-
     }
 
     @Override
@@ -114,9 +108,18 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/blueAbility.png",995,640,110,80);
 
 
-
         SaxionApp.drawImage("BasicGame/healthBar.png",200,-50,360,190);
         SaxionApp.drawImage("BasicGame/healthBar.png",920,-50,360,190);
+
+        /*SaxionApp.drawImage("BasicGame/healthBar.png",200,35,remainingHealth,35);
+        SaxionApp.turnBorderOff();
+        SaxionApp.setFill(Color.green);
+        SaxionApp.drawRectangle(227,49,313,12);
+
+        //SaxionApp.drawImage("BasicGame/healthBar.png",920,35,remainingHealth,35);
+        SaxionApp.turnBorderOff();
+        SaxionApp.setFill(Color.green);
+        SaxionApp.drawRectangle(947,49,313,12);//*/
 
         SaxionApp.drawImage("BasicGame/redCard.png",50,130,80,120);
         SaxionApp.drawImage("BasicGame/greenCard.png/",50,320,80,120);
@@ -125,6 +128,10 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/redCard.png",1370,130,80,120);
         SaxionApp.drawImage("BasicGame/greenCard.png",1370,320,80,120);
         SaxionApp.drawImage("BasicGame/blueCard.png",1370,510,80,120);
+    }
 
+    private void characters () {
+        SaxionApp.drawImage("BasicGame/dummy1.png",1100,390,150,230);
+        SaxionApp.drawImage("BasicGame/dummy2.png",280,385,200,240);
     }
 }
