@@ -152,9 +152,8 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/greenAbility.png",1115,640,135,80);
         SaxionApp.drawImage("BasicGame/blueAbility.png",995,640,110,80);
 
-
-
         SaxionApp.drawImage("BasicGame/healthBar.png",200,35,345,35);
+
         SaxionApp.turnBorderOff();
         SaxionApp.setFill(Color.green);
         SaxionApp.drawRectangle(227,49,getHealthBarWidth(dummy.hp),12);
