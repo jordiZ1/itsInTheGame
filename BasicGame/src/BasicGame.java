@@ -4,22 +4,31 @@ import nl.saxion.app.interaction.GameLoop;
 import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 
+import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class BasicGame implements GameLoop {
 
-    public static void main(String[] args) {
-        SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
+    //private int remainingHealth = 360;
+    public static void main(String[] args) {SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
     }
 
-    ArrayList<Player> players = new ArrayList<>();
+    God dummy = new God();
+    God dummy2 = new God();
+
+    ArrayList<String> players = new ArrayList<>();
     int turn;
+    boolean turnPlayer1;
+    boolean turnPlayer2 = false;
 
     @Override
     public void init() {
-        God dummy = new God();
-        God dummy2 = new God();
+        turn = 1;
+        turnPlayer1 = true;
+        turnPlayer2 = false;
+
+        players.add("Player 1");
+        players.add("Player 2");
 
         dummy.characterId = 1;
         dummy.hp = 100;
@@ -31,71 +40,59 @@ public class BasicGame implements GameLoop {
         dummy2.name = "Odin";
         dummy2.abilityDamage1 = 25;
 
-        Player player1 = new Player();
-        Player player2 = new Player();
-
-        player1.id = 1;
-        player1.name = "Speler 1";
-        player1.cards.add(dummy);
-        player1.activeCard = 0;
-
-        player2.id = 2;
-        player2.name = "Speler 2";
-        player2.cards.add(dummy2);
-        player2.activeCard = 0;
-
-        players.add(player1);
-        players.add(player2);
-
-        turn = 1;
     }
 
     @Override
     public void loop() {
         drawGameBoard();
-        Player player1 = players.get(0);
-        Player player2 = players.get(1);
+        characters();
 
-        Player currentPlayer = getCurrentPlayer();
-        SaxionApp.drawText(player1.cards.get(player1.activeCard).name, 100, 100, 50);
-        SaxionApp.drawText(String.valueOf(player1.cards.get(player1.activeCard).hp),100,200,50);
-        SaxionApp.drawText(player2.cards.get(player2.activeCard).name, 1300, 100,50);
-        SaxionApp.drawText(String.valueOf(player2.cards.get(player2.activeCard).hp),1300,200,50);
+        String currentPlayer = getCurrentPlayer();
+
+        SaxionApp.drawText(dummy.name, 100, 100, 50);
+        SaxionApp.drawText(String.valueOf(dummy.hp),100,200,50);
+        SaxionApp.drawText(dummy2.name, 1300, 100,50);
+        SaxionApp.drawText(String.valueOf(dummy2.hp),1300,200,50);
 
         SaxionApp.drawText("Turn: " + turn, 80, 80, 20);
-        SaxionApp.drawText(currentPlayer.name, 100, 100, 20);
-
-        SaxionApp.sleep(2);
-
-        turn++;
-        reversePlayersList();
+        SaxionApp.drawText(currentPlayer, 100, 100, 20);
     }
 
     @Override
     public void keyboardEvent(KeyboardEvent keyboardEvent) {
+        if (turnPlayer1) {
+            if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Q) {
+                dummy2.hp = dummy2.hp - dummy.abilityDamage1;
+                turnPlayer2 = true;
+                turnPlayer1 = false;
+                turn++;
+            }
+        }
 
+        else if (turnPlayer2){
+            if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Z) {
+                dummy.hp = dummy.hp - dummy2.abilityDamage1;
+                turnPlayer1 = true;
+                turnPlayer2 = false;
+                turn++;
+            }
+        }
     }
+
+
 
     @Override
     public void mouseEvent(MouseEvent mouseEvent) {
 
+
     }
 
-    private Player getCurrentPlayer() {
-        return players.get(0);
-//        if (turn % 2 == 1) {
-//            return player1;
-//        }
-//
-//        return player2;
-    }
+    public String getCurrentPlayer() {
+        if (turn % 2 == 1) {
+            return players.get(0);
+        }
 
-    private void reversePlayersList() {
-        Collections.reverse(players);
-    }
-
-    private void doAttack() {
-
+        return players.get(1);
     }
 
     private void drawGameBoard() {
@@ -110,8 +107,19 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/greenAbility.png",1115,640,135,80);
         SaxionApp.drawImage("BasicGame/blueAbility.png",995,640,110,80);
 
+
         SaxionApp.drawImage("BasicGame/healthBar.png",200,-50,360,190);
         SaxionApp.drawImage("BasicGame/healthBar.png",920,-50,360,190);
+
+        /*SaxionApp.drawImage("BasicGame/healthBar.png",200,35,remainingHealth,35);
+        SaxionApp.turnBorderOff();
+        SaxionApp.setFill(Color.green);
+        SaxionApp.drawRectangle(227,49,313,12);
+
+        //SaxionApp.drawImage("BasicGame/healthBar.png",920,35,remainingHealth,35);
+        SaxionApp.turnBorderOff();
+        SaxionApp.setFill(Color.green);
+        SaxionApp.drawRectangle(947,49,313,12);//*/
 
         SaxionApp.drawImage("BasicGame/redCard.png",50,130,80,120);
         SaxionApp.drawImage("BasicGame/greenCard.png/",50,320,80,120);
@@ -120,5 +128,10 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/redCard.png",1370,130,80,120);
         SaxionApp.drawImage("BasicGame/greenCard.png",1370,320,80,120);
         SaxionApp.drawImage("BasicGame/blueCard.png",1370,510,80,120);
+    }
+
+    private void characters () {
+        SaxionApp.drawImage("BasicGame/dummy1.png",1100,390,150,230);
+        SaxionApp.drawImage("BasicGame/dummy2.png",280,385,200,240);
     }
 }
