@@ -12,7 +12,7 @@ public class BasicGame implements GameLoop {
 
     private int dummy1Position = 1100;
     private int dummy2Position = 280;
-    private int remainingHealth = 360;
+
     public static void main(String[] args) {SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
     }
 
@@ -152,12 +152,12 @@ public class BasicGame implements GameLoop {
 
 
 
-        SaxionApp.drawImage("BasicGame/healthBar.png",200,35,remainingHealth,35);
+        SaxionApp.drawImage("BasicGame/healthBar.png",200,35,360,35);
         SaxionApp.turnBorderOff();
         SaxionApp.setFill(Color.green);
         SaxionApp.drawRectangle(227,49,313,12);
 
-        SaxionApp.drawImage("BasicGame/healthBar.png",920,35,remainingHealth,35);
+        SaxionApp.drawImage("BasicGame/healthBar.png",920,35,360,35);
         SaxionApp.turnBorderOff();
         SaxionApp.setFill(Color.green);
         SaxionApp.drawRectangle(947,49,313,12);//*/
