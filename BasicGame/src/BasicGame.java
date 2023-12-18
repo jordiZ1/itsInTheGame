@@ -9,6 +9,9 @@ import java.util.ArrayList;
 
 public class BasicGame implements GameLoop {
 
+    private int dummy1Position = 1100;
+    private int dummy2Position = 280;
+
     public static void main(String[] args) {SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
     }
 
@@ -40,6 +43,7 @@ public class BasicGame implements GameLoop {
         dummy.abilityDamage1 = 15;
         dummy.abilityDamage2 = 20;
         dummy.abilityDamage3 = 25;
+        dummy.image = "BasicGame/dummy1.png";
 
         dummy2.characterId = 2;
         dummy2.hp = 100;
@@ -47,6 +51,7 @@ public class BasicGame implements GameLoop {
         dummy2.abilityDamage1 = 25;
         dummy2.abilityDamage2 = 15;
         dummy2.abilityDamage3 = 10;
+        dummy2.image = "BasicGame/dummy2.png";
 
     }
 
@@ -82,18 +87,46 @@ public class BasicGame implements GameLoop {
     public void keyboardEvent(KeyboardEvent keyboardEvent) {
         if (turnPlayer1 && gameActive) {
             if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Q) {
+                dummy2Position = dummy1Position - 160;
+                new java.util.Timer().schedule(
+                        new java.util.TimerTask() {
+                            @Override
+                            public void run() {
+                                dummy2Position = 280;
+                            }
+                        }
+                        , 1000);
+
                 dummy2.hp = dummy2.hp - dummy.abilityDamage1;
                 turnPlayer2 = true;
                 turnPlayer1 = false;
                 turn++;
             }
             if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_W) {
+                dummy2Position = dummy1Position - 160;
+                new java.util.Timer().schedule(
+                        new java.util.TimerTask() {
+                            @Override
+                            public void run() {
+                                dummy2Position = 280;
+                            }
+                        }
+                        , 1000);
                 dummy2.hp = dummy2.hp - dummy.abilityDamage2;
                 turnPlayer2 = true;
                 turnPlayer1 = false;
                 turn++;
             }
             if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_E) {
+                dummy2Position = dummy1Position - 160;
+                new java.util.Timer().schedule(
+                        new java.util.TimerTask() {
+                            @Override
+                            public void run() {
+                                dummy2Position = 280;
+                            }
+                        }
+                        , 1000);
                 dummy2.hp = dummy2.hp - dummy.abilityDamage3;
                 turnPlayer2 = true;
                 turnPlayer1 = false;
@@ -104,18 +137,46 @@ public class BasicGame implements GameLoop {
 
         else if (turnPlayer2 && gameActive){
             if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Z) {
+                dummy1Position = dummy2Position + 150;
+                new java.util.Timer().schedule(
+                        new java.util.TimerTask() {
+                            @Override
+                            public void run() {
+                                dummy1Position = 1100;
+                            }
+                        }
+                        , 1000);
+
                 dummy.hp = dummy.hp - dummy2.abilityDamage1;
                 turnPlayer1 = true;
                 turnPlayer2 = false;
                 turn++;
             }
             if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_X) {
+                dummy1Position = dummy2Position + 150;
+                new java.util.Timer().schedule(
+                        new java.util.TimerTask() {
+                            @Override
+                            public void run() {
+                                dummy1Position = 1100;
+                            }
+                        }
+                        , 1000);
                 dummy.hp = dummy.hp - dummy2.abilityDamage1;
                 turnPlayer1 = true;
                 turnPlayer2 = false;
                 turn++;
             }
             if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_C) {
+                dummy1Position = dummy2Position + 150;
+                new java.util.Timer().schedule(
+                        new java.util.TimerTask() {
+                            @Override
+                            public void run() {
+                                dummy1Position = 1100;
+                            }
+                        }
+                        , 1000);
                 dummy.hp = dummy.hp - dummy2.abilityDamage1;
                 turnPlayer1 = true;
                 turnPlayer2 = false;
@@ -128,7 +189,6 @@ public class BasicGame implements GameLoop {
 
     @Override
     public void mouseEvent(MouseEvent mouseEvent) {
-
 
     }
 
@@ -173,8 +233,8 @@ public class BasicGame implements GameLoop {
     }
 
     private void characters () {
-        SaxionApp.drawImage("BasicGame/dummy1.png",1100,390,150,230);
-        SaxionApp.drawImage("BasicGame/dummy2.png",280,385,200,240);
+        SaxionApp.drawImage(dummy.image,dummy1Position,390,150,230);
+        SaxionApp.drawImage(dummy2.image,dummy2Position,385,200,240);
     }
 
     public int getHealthBarWidth(int hp){
