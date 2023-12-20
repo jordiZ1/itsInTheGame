@@ -12,8 +12,11 @@ public class BasicGame implements GameLoop {
     private int dummy1Position = 1100;
     private int dummy2Position = 280;
 
-    public static void main(String[] args) {SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
+    public static void main(String[] args) {
+        SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
     }
+
+    String currentScreen = "startScreen";
 
     God dummy = new God();
     God dummy2 = new God();
@@ -57,34 +60,113 @@ public class BasicGame implements GameLoop {
 
     @Override
     public void loop() {
+        switch (currentScreen) {
+            case "startScreen" -> startScreenLoop();
+            case "battleScreen" -> battleScreenLoop();
+            case "menuScreen" -> menuScreenLoop();
+            case "inventoryScreen" -> inventoryScreenLoop();
+            case "profileScreen" -> profileScreenLoop();
+            case "instructionScreen" -> instructionScreenLoop();
+        }
+
+    }
+
+    public void startScreenLoop() {
+        currentScreen = "startScreen";
+        drawStarterScreen();
+    }
+    public void menuScreenLoop() {
+        currentScreen = "menuScreen";
+        drawMenu();
+    }
+    public void battleScreenLoop() {
+
+        currentScreen = "battleScreen";
+
         drawGameBoard();
         characters();
 
         String currentPlayer = getCurrentPlayer();
 
         // Draws Dummy HP and names
-        SaxionApp.drawText(dummy.name, 300, 100, 50);
-        SaxionApp.drawText(String.valueOf(dummy.hp),300,200,50);
-        SaxionApp.drawText(dummy2.name, 1000, 100,50);
-        SaxionApp.drawText(String.valueOf(dummy2.hp),1000,200,50);
+        /* SaxionApp.drawText(dummy.name, 300, 100, 50);
+        SaxionApp.drawText(String.valueOf(dummy.hp), 300, 200, 50);
+        SaxionApp.drawText(dummy2.name, 1000, 100, 50);
+        SaxionApp.drawText(String.valueOf(dummy2.hp), 1000, 200, 50); */
 
         SaxionApp.drawText("Turn: " + turn, 700, 80, 20);
         SaxionApp.drawText(currentPlayer, 700, 100, 20);
 
-        if (dummy.hp == 0 || dummy2.hp == 0){
+        if (dummy.hp == 0 || dummy2.hp == 0) {
             gameActive = false;
             SaxionApp.drawBorderedText("GAME OVER", 600, 375, 50);
-            if (dummy.hp == 0){
+            if (dummy.hp == 0) {
                 SaxionApp.drawBorderedText(dummy2.name + " Wins!", 650, 425, 30);
-            }
-            else if (dummy2.hp == 0){
+            } else if (dummy2.hp == 0) {
                 SaxionApp.drawBorderedText(dummy.name + " Wins!", 650, 425, 30);
             }
         }
     }
 
+    public void inventoryScreenLoop(){
+        currentScreen = "inventoryScreen";
+        SaxionApp.clear();
+        SaxionApp.drawText("inv", 300, 300, 100);
+
+    }
+
+    public void profileScreenLoop(){
+        currentScreen = "profileScreen";
+
+        SaxionApp.clear();
+        SaxionApp.drawText("profile", 300, 300, 100);
+    }
+
+    public void instructionScreenLoop(){
+        currentScreen = "instructionScreen";
+
+        SaxionApp.clear();
+        SaxionApp.drawText("instr", 300, 300, 100);
+    }
+
+
     @Override
     public void keyboardEvent(KeyboardEvent keyboardEvent) {
+        switch (currentScreen) {
+            case "menuScreen" -> menuScreenKeyboardEvent(keyboardEvent);
+            case "battleScreen" -> battleScreenKeyboardEvent(keyboardEvent);
+            case "startScreen" -> startScreenKeyboardEvent(keyboardEvent);
+            case "inventoryScreen" -> inventoryScreenKeyboardEvent(keyboardEvent);
+            case "profileScreen" -> profileScreenKeyboardEvent(keyboardEvent);
+            case "instructionScreen" -> instructionScreenKeyboardEvent(keyboardEvent);
+        }
+
+    }
+
+    public void startScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
+        if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_SPACE) {
+            currentScreen = "menuScreen";
+        }
+    }
+
+
+    public void menuScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
+        if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_1) {
+            currentScreen = "battleScreen";
+        }
+        else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_2) {
+            currentScreen = "inventoryScreen";
+        }
+        else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_3) {
+            currentScreen = "profileScreen";
+        }
+        else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_4) {
+            currentScreen = "instructionScreen";
+        }
+
+    }
+
+    public void battleScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (turnPlayer1 && gameActive) {
             if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Q) {
                 dummy2Position = dummy1Position - 160;
@@ -132,10 +214,7 @@ public class BasicGame implements GameLoop {
                 turnPlayer1 = false;
                 turn++;
             }
-        }
-
-
-        else if (turnPlayer2 && gameActive){
+        } else if (turnPlayer2 && gameActive) {
             if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Z) {
                 dummy1Position = dummy2Position + 150;
                 new java.util.Timer().schedule(
@@ -185,7 +264,25 @@ public class BasicGame implements GameLoop {
         }
     }
 
+    public void inventoryScreenKeyboardEvent(KeyboardEvent keyboardEvent){
+        if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
+            currentScreen = "menuScreen";
+        }
+    }
 
+    public void profileScreenKeyboardEvent(KeyboardEvent keyboardEvent){
+        if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
+            currentScreen = "menuScreen";
+        }
+
+    }
+
+    public void instructionScreenKeyboardEvent(KeyboardEvent keyboardEvent){
+        if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
+            currentScreen = "menuScreen";
+        }
+
+    }
 
     @Override
     public void mouseEvent(MouseEvent mouseEvent) {
@@ -200,45 +297,65 @@ public class BasicGame implements GameLoop {
         return players.get(1);
     }
 
+    private void drawStarterScreen() {
+
+        SaxionApp.clear();
+        SaxionApp.drawImage("BasicGame/starterscreen.jpg", 0, 0, 1500, 750); //prints background
+        SaxionApp.drawImage("BasicGame/botg.png", 250, 50); // Prints game logo
+        SaxionApp.drawImage("BasicGame/starttext1.png", 400, 600);//Prints press SPACE to start image
+    }
+
+
+    private void drawMenu() {
+        SaxionApp.clear();
+        SaxionApp.drawImage("BasicGame/menubackground.jpg", 0,0, 1500, 750);
+        SaxionApp.drawImage("BasicGame/botg.png", 250, 50);
+        SaxionApp.drawImage("BasicGame/menuoptions.png", 50,250);
+        /* SaxionApp.drawBorderedText("1. Battle", 600, 200, 50);
+        SaxionApp.drawBorderedText("2. Inventory", 600, 300, 50);
+        SaxionApp.drawBorderedText("3. Choose profile", 600, 400, 50);
+        SaxionApp.drawBorderedText("4. Instructions", 600, 500, 50); */
+    }
+
     private void drawGameBoard() {
         SaxionApp.clear();
-        SaxionApp.drawImage("BasicGame/BattleArena1.jpg", 0,0, 1500, 750);
+        SaxionApp.drawImage("BasicGame/BattleArena1.jpg", 0, 0, 1500, 750);
 
-        SaxionApp.drawImage("BasicGame/redAbility.png",130,580,110,200);
-        SaxionApp.drawImage("BasicGame/greenAbility.png",250,640,135,80);
-        SaxionApp.drawImage("BasicGame/blueAbility.png",395,640,110,80);
+        SaxionApp.drawImage("BasicGame/redAbility.png", 130, 580, 110, 200);
+        SaxionApp.drawImage("BasicGame/greenAbility.png", 250, 640, 135, 80);
+        SaxionApp.drawImage("BasicGame/blueAbility.png", 395, 640, 110, 80);
 
-        SaxionApp.drawImage("BasicGame/redAbility.png",1260,580,110,200);
-        SaxionApp.drawImage("BasicGame/greenAbility.png",1115,640,135,80);
-        SaxionApp.drawImage("BasicGame/blueAbility.png",995,640,110,80);
+        SaxionApp.drawImage("BasicGame/redAbility.png", 1260, 580, 110, 200);
+        SaxionApp.drawImage("BasicGame/greenAbility.png", 1115, 640, 135, 80);
+        SaxionApp.drawImage("BasicGame/blueAbility.png", 995, 640, 110, 80);
 
-        SaxionApp.drawImage("BasicGame/healthBar.png",200,35,345,35);
+        SaxionApp.drawImage("BasicGame/healthBar.png", 200, 35, 345, 35);
 
         SaxionApp.turnBorderOff();
         SaxionApp.setFill(Color.green);
-        SaxionApp.drawRectangle(227,49,getHealthBarWidth(dummy.hp),12);
+        SaxionApp.drawRectangle(227, 49, getHealthBarWidth(dummy.hp), 12);
 
-        SaxionApp.drawImage("BasicGame/healthBar.png",920,35,345,35);
+        SaxionApp.drawImage("BasicGame/healthBar.png", 920, 35, 345, 35);
         SaxionApp.turnBorderOff();
         SaxionApp.setFill(Color.green);
-        SaxionApp.drawRectangle(947,49,getHealthBarWidth(dummy2.hp),12);//*/
+        SaxionApp.drawRectangle(947, 49, getHealthBarWidth(dummy2.hp), 12);//*/
 
-        SaxionApp.drawImage("BasicGame/redCard.png",50,130,80,120);
-        SaxionApp.drawImage("BasicGame/greenCard.png/",50,320,80,120);
-        SaxionApp.drawImage("BasicGame/blueCard.png",50,510,80,120);
+        SaxionApp.drawImage("BasicGame/redCard.png", 50, 130, 80, 120);
+        SaxionApp.drawImage("BasicGame/greenCard.png/", 50, 320, 80, 120);
+        SaxionApp.drawImage("BasicGame/blueCard.png", 50, 510, 80, 120);
 
-        SaxionApp.drawImage("BasicGame/redCard.png",1370,130,80,120);
-        SaxionApp.drawImage("BasicGame/greenCard.png",1370,320,80,120);
-        SaxionApp.drawImage("BasicGame/blueCard.png",1370,510,80,120);
+        SaxionApp.drawImage("BasicGame/redCard.png", 1370, 130, 80, 120);
+        SaxionApp.drawImage("BasicGame/greenCard.png", 1370, 320, 80, 120);
+        SaxionApp.drawImage("BasicGame/blueCard.png", 1370, 510, 80, 120);
     }
 
-    private void characters () {
-        SaxionApp.drawImage(dummy.image,dummy1Position,390,150,230);
-        SaxionApp.drawImage(dummy2.image,dummy2Position,385,200,240);
+    private void characters() {
+        SaxionApp.drawImage(dummy.image, dummy1Position, 390, 150, 230);
+        SaxionApp.drawImage(dummy2.image, dummy2Position, 385, 200, 240);
     }
 
-    public int getHealthBarWidth(int hp){
-        double width = ( (double) hp /100) * 300;
+    public int getHealthBarWidth(int hp) {
+        double width = ((double) hp / 100) * 300;
         return (int) width;
 
     }
