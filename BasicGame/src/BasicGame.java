@@ -72,17 +72,12 @@ public class BasicGame implements GameLoop {
     }
 
     public void startScreenLoop() {
-        currentScreen = "startScreen";
         drawStarterScreen();
     }
     public void menuScreenLoop() {
-        currentScreen = "menuScreen";
         drawMenu();
     }
     public void battleScreenLoop() {
-
-        currentScreen = "battleScreen";
-
         drawGameBoard();
         characters();
 
@@ -109,22 +104,17 @@ public class BasicGame implements GameLoop {
     }
 
     public void inventoryScreenLoop(){
-        currentScreen = "inventoryScreen";
         SaxionApp.clear();
         SaxionApp.drawText("inv", 300, 300, 100);
 
     }
 
     public void profileScreenLoop(){
-        currentScreen = "profileScreen";
-
         SaxionApp.clear();
         SaxionApp.drawText("profile", 300, 300, 100);
     }
 
     public void instructionScreenLoop(){
-        currentScreen = "instructionScreen";
-
         SaxionApp.clear();
         SaxionApp.drawText("instr", 300, 300, 100);
     }
