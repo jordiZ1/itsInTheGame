@@ -2,6 +2,8 @@
   <library name="SaxionCanvas">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/resources/SaxionApp.jar!/" />
+      <root url="jar://$PROJECT_DIR$/resources/postgresql-42.7.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/resources/dotenv-java-3.0.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
