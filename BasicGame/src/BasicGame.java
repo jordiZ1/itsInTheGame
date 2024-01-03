@@ -5,6 +5,7 @@ import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 
 import java.awt.*;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class BasicGame implements GameLoop {
@@ -27,6 +28,22 @@ public class BasicGame implements GameLoop {
 
     @Override
     public void init() {
+
+        Connection connection = new ConnectDB().getConnection();
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet results = statement.executeQuery("SELECT * FROM god");
+            while (results.next()) {
+                System.out.println(results.getString("name"));
+            }
+            results.close();
+            statement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
         turn = 1;
         turnPlayer1 = true;
         turnPlayer2 = false;
@@ -52,7 +69,6 @@ public class BasicGame implements GameLoop {
         dummy2.abilityDamage2 = 15;
         dummy2.abilityDamage3 = 10;
         dummy2.image = "BasicGame/dummy2.png";
-
     }
 
     @Override

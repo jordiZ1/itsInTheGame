@@ -6,6 +6,5 @@ public class God {
     int abilityDamage2;
     int abilityDamage3;
     String image;
-
 }
 
