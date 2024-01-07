@@ -29,10 +29,12 @@ public class BasicGame implements GameLoop {
 
     boolean gameActive;
 
+    Connection connection = null;
+
     @Override
     public void init() {
 
-        Connection connection = new ConnectDB().getConnection();
+        connection = new ConnectDB().getConnection();
 
         try {
             Statement statement = connection.createStatement();
