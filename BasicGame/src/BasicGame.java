@@ -23,6 +23,7 @@ public class BasicGame implements GameLoop {
     God dummy2 = new God();
 
     ArrayList<String> players = new ArrayList<>();
+    ArrayList<Player> arenaPlayers = new ArrayList<>();
     int turn;
     boolean turnPlayer1;
     boolean turnPlayer2 = false;
@@ -160,6 +161,7 @@ public class BasicGame implements GameLoop {
 
     public void menuScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_1) {
+            setupBattleArena();
             currentScreen = "battleScreen";
         }
         else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_2) {
@@ -295,6 +297,28 @@ public class BasicGame implements GameLoop {
     @Override
     public void mouseEvent(MouseEvent mouseEvent) {
 
+    }
+
+    private void setupBattleArena() {
+        Player player1 = getPlayerFromDB(1); //temporary hardcoded id
+        Player player2 = getPlayerFromDB(2); //temporary hardcoded id
+        arenaPlayers.add(player1);
+        arenaPlayers.add(player2);
+    }
+
+    private Player getPlayerFromDB(int id) {
+        Player player = null;
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT player_id, name FROM player WHERE player_id = ?");
+            statement.setInt(1, id);
+            ResultSet results = statement.executeQuery();
+            while (results.next()) {
+                player = new Player(results.getInt("player_id"), results.getString("name"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return player;
     }
 
     public String getCurrentPlayer() {
