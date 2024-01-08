@@ -315,10 +315,35 @@ public class BasicGame implements GameLoop {
             while (results.next()) {
                 player = new Player(results.getInt("player_id"), results.getString("name"));
             }
+            results.close();
+            statement.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return player;
+    }
+
+    private God getGodFromDB(int id) {
+        God god = null;
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM god WHERE god_id = ?");
+            statement.setInt(1, id);
+            ResultSet results = statement.executeQuery();
+            while (results.next()) {
+                god = new God();
+                god.id = results.getInt("god_id");
+                god.name = results.getString("name");
+                god.category = results.getString("category");
+                god.elementId = results.getInt("element_id");
+                god.hp = results.getInt("health");
+            }
+            results.close();
+            statement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return god;
     }
 
     public String getCurrentPlayer() {

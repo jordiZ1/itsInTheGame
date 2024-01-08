@@ -17,8 +17,7 @@ CREATE TABLE god (
     name VARCHAR(255) NOT NULL,
     category VARCHAR(255) NOT NULL,
     element_id BIGINT NOT NULL,
-    health BIGINT NOT NULL,
-    image VARCHAR(255) NOT NULL
+    health BIGINT NOT NULL
 );
 
 CREATE TABLE player_god (
@@ -73,10 +72,10 @@ VALUES
     ('attack6', 2, 25);
 
 INSERT INTO god
-    (name, category, element_id, health, image)
+    (name, category, element_id, health)
 VALUES
-    ('Thor', 'Norse', 1, 100, 'BasicGame/dummy1.png'),
-    ('Loki', 'Norse', 2, 100, 'BasicGame/dummy2.png');
+    ('Thor', 'Norse', 1, 100),
+    ('Odin', 'Norse', 2, 100);
 
 INSERT INTO god_attack
     (god_id, attack_id)
