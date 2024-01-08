@@ -43,7 +43,7 @@ public class BasicGame implements GameLoop {
         dummy.abilityDamage1 = 15;
         dummy.abilityDamage2 = 20;
         dummy.abilityDamage3 = 25;
-        dummy.image = "BasicGame/";
+        dummy.image = "BasicGame/AoKuangFaceLeft.png";
 
         dummy2.characterId = 2;
         dummy2.hp = 100;
@@ -51,7 +51,7 @@ public class BasicGame implements GameLoop {
         dummy2.abilityDamage1 = 25;
         dummy2.abilityDamage2 = 15;
         dummy2.abilityDamage3 = 10;
-        dummy2.image = "BasicGame/";
+        dummy2.image = "BasicGame/AchillesFaceRight.png";
 
     }
 
@@ -223,7 +223,7 @@ public class BasicGame implements GameLoop {
         SaxionApp.setFill(Color.green);
         SaxionApp.drawRectangle(947,49,getHealthBarWidth(dummy2.hp),12);//*/
 
-        SaxionApp.drawImage("BasicGame/AchillesCard.png",50,130,80,120);
+        SaxionApp.drawImage("BasicGame/HeBoCard.png",50,130,80,120);
         SaxionApp.drawImage("BasicGame/AtlasCard.png",50,320,80,120);
         SaxionApp.drawImage("BasicGame/blueCard.png",50,510,80,120);
 
