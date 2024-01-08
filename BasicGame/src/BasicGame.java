@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 public class BasicGame implements GameLoop {
 
-    private int dummy1Position = 1100;
-    private int dummy2Position = 280;
+    private int dummy1Position = 1000;
+    private int dummy2Position = 160;
 
     public static void main(String[] args) {
         SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
@@ -61,19 +61,19 @@ public class BasicGame implements GameLoop {
 
         dummy.characterId = 1;
         dummy.hp = 100;
-        dummy.name = "Dummy 1";
+        dummy.name = "Achilles";
         dummy.abilityDamage1 = 15;
         dummy.abilityDamage2 = 20;
         dummy.abilityDamage3 = 25;
-        dummy.image = "BasicGame/dummy1.png";
+        dummy.image = "BasicGame/AoKuangFaceLeft.png";
 
         dummy2.characterId = 2;
         dummy2.hp = 100;
-        dummy2.name = "Dummy 2";
+        dummy2.name = "Ares";
         dummy2.abilityDamage1 = 25;
         dummy2.abilityDamage2 = 15;
         dummy2.abilityDamage3 = 10;
-        dummy2.image = "BasicGame/dummy2.png";
+        dummy2.image = "BasicGame/AchillesFaceRight.png";
     }
 
     @Override
@@ -182,7 +182,7 @@ public class BasicGame implements GameLoop {
                         new java.util.TimerTask() {
                             @Override
                             public void run() {
-                                dummy2Position = 280;
+                                dummy2Position = 160;
                             }
                         }
                         , 1000);
@@ -198,7 +198,7 @@ public class BasicGame implements GameLoop {
                         new java.util.TimerTask() {
                             @Override
                             public void run() {
-                                dummy2Position = 280;
+                                dummy2Position = 160;
                             }
                         }
                         , 1000);
@@ -213,7 +213,7 @@ public class BasicGame implements GameLoop {
                         new java.util.TimerTask() {
                             @Override
                             public void run() {
-                                dummy2Position = 280;
+                                dummy2Position = 160;
                             }
                         }
                         , 1000);
@@ -229,7 +229,7 @@ public class BasicGame implements GameLoop {
                         new java.util.TimerTask() {
                             @Override
                             public void run() {
-                                dummy1Position = 1100;
+                                dummy1Position = 1000;
                             }
                         }
                         , 1000);
@@ -245,7 +245,7 @@ public class BasicGame implements GameLoop {
                         new java.util.TimerTask() {
                             @Override
                             public void run() {
-                                dummy1Position = 1100;
+                                dummy1Position = 1000;
                             }
                         }
                         , 1000);
@@ -260,7 +260,7 @@ public class BasicGame implements GameLoop {
                         new java.util.TimerTask() {
                             @Override
                             public void run() {
-                                dummy1Position = 1100;
+                                dummy1Position = 1000;
                             }
                         }
                         , 1000);
@@ -329,13 +329,13 @@ public class BasicGame implements GameLoop {
         SaxionApp.clear();
         SaxionApp.drawImage("BasicGame/BattleArena1.jpg", 0, 0, 1500, 750);
 
-        SaxionApp.drawImage("BasicGame/redAbility.png", 130, 580, 110, 200);
-        SaxionApp.drawImage("BasicGame/greenAbility.png", 250, 640, 135, 80);
-        SaxionApp.drawImage("BasicGame/blueAbility.png", 395, 640, 110, 80);
+        SaxionApp.drawImage("BasicGame/redAbility.png",130,580,100,200);
+        SaxionApp.drawImage("BasicGame/greenAbility.png",250,640,135,80);
+        SaxionApp.drawImage("BasicGame/blueAbility.png",395,640,110,80);
 
-        SaxionApp.drawImage("BasicGame/redAbility.png", 1260, 580, 110, 200);
-        SaxionApp.drawImage("BasicGame/greenAbility.png", 1115, 640, 135, 80);
-        SaxionApp.drawImage("BasicGame/blueAbility.png", 995, 640, 110, 80);
+        SaxionApp.drawImage("BasicGame/redAbility.png",1260,580,100,200);
+        SaxionApp.drawImage("BasicGame/greenAbility.png",1115,640,135,80);
+        SaxionApp.drawImage("BasicGame/blueAbility.png",995,640,110,80);
 
         SaxionApp.drawImage("BasicGame/healthBar.png", 200, 35, 345, 35);
 
@@ -348,18 +348,19 @@ public class BasicGame implements GameLoop {
         SaxionApp.setFill(Color.green);
         SaxionApp.drawRectangle(947, 49, getHealthBarWidth(dummy2.hp), 12);//*/
 
-        SaxionApp.drawImage("BasicGame/redCard.png", 50, 130, 80, 120);
-        SaxionApp.drawImage("BasicGame/greenCard.png/", 50, 320, 80, 120);
-        SaxionApp.drawImage("BasicGame/blueCard.png", 50, 510, 80, 120);
+        SaxionApp.drawImage("BasicGame/HeBoCard.png",50,130,80,120);
+        SaxionApp.drawImage("BasicGame/AtlasCard.png",50,320,80,120);
+        SaxionApp.drawImage("BasicGame/blueCard.png",50,510,80,120);
+
 
         SaxionApp.drawImage("BasicGame/redCard.png", 1370, 130, 80, 120);
         SaxionApp.drawImage("BasicGame/greenCard.png", 1370, 320, 80, 120);
         SaxionApp.drawImage("BasicGame/blueCard.png", 1370, 510, 80, 120);
     }
 
-    private void characters() {
-        SaxionApp.drawImage(dummy.image, dummy1Position, 390, 150, 230);
-        SaxionApp.drawImage(dummy2.image, dummy2Position, 385, 200, 240);
+    private void characters () {
+        SaxionApp.drawImage(dummy.image,dummy1Position,360,320,270);
+        SaxionApp.drawImage(dummy2.image,dummy2Position,365,470,270);
     }
 
     public int getHealthBarWidth(int hp) {
