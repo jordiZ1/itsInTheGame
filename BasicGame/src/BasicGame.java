@@ -93,9 +93,11 @@ public class BasicGame implements GameLoop {
     public void startScreenLoop() {
         drawStarterScreen();
     }
+
     public void menuScreenLoop() {
         drawMenu();
     }
+
     public void battleScreenLoop() {
         drawGameBoard();
         characters();
@@ -122,18 +124,18 @@ public class BasicGame implements GameLoop {
         }
     }
 
-    public void inventoryScreenLoop(){
+    public void inventoryScreenLoop() {
         SaxionApp.clear();
         SaxionApp.drawText("inv", 300, 300, 100);
 
     }
 
-    public void profileScreenLoop(){
+    public void profileScreenLoop() {
         SaxionApp.clear();
         SaxionApp.drawText("profile", 300, 300, 100);
     }
 
-    public void instructionScreenLoop(){
+    public void instructionScreenLoop() {
         SaxionApp.clear();
         SaxionApp.drawText("instr", 300, 300, 100);
     }
@@ -163,14 +165,11 @@ public class BasicGame implements GameLoop {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_1) {
             setupBattleArena();
             currentScreen = "battleScreen";
-        }
-        else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_2) {
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_2) {
             currentScreen = "inventoryScreen";
-        }
-        else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_3) {
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_3) {
             currentScreen = "profileScreen";
-        }
-        else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_4) {
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_4) {
             currentScreen = "instructionScreen";
         }
 
@@ -274,20 +273,20 @@ public class BasicGame implements GameLoop {
         }
     }
 
-    public void inventoryScreenKeyboardEvent(KeyboardEvent keyboardEvent){
+    public void inventoryScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
         }
     }
 
-    public void profileScreenKeyboardEvent(KeyboardEvent keyboardEvent){
+    public void profileScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
         }
 
     }
 
-    public void instructionScreenKeyboardEvent(KeyboardEvent keyboardEvent){
+    public void instructionScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
         }
@@ -300,50 +299,72 @@ public class BasicGame implements GameLoop {
     }
 
     private void setupBattleArena() {
-        Player player1 = getPlayerFromDB(1); //temporary hardcoded id
-        Player player2 = getPlayerFromDB(2); //temporary hardcoded id
+        Player player1;
+        Player player2;
+        try {
+            player1 = getPlayerFromDB(1); //temporary hardcoded id
+            player2 = getPlayerFromDB(2); //temporary hardcoded id
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         arenaPlayers.add(player1);
         arenaPlayers.add(player2);
     }
 
-    private Player getPlayerFromDB(int id) {
+    private Player getPlayerFromDB(int id) throws SQLException {
         Player player = null;
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT player_id, name FROM player WHERE player_id = ?");
-            statement.setInt(1, id);
-            ResultSet results = statement.executeQuery();
-            while (results.next()) {
-                player = new Player(results.getInt("player_id"), results.getString("name"));
-            }
-            results.close();
-            statement.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        PreparedStatement statement = connection.prepareStatement("SELECT player_id, name FROM player WHERE player_id = ?");
+        statement.setInt(1, id);
+        ResultSet results = statement.executeQuery();
+        while (results.next()) {
+            player = new Player(results.getInt("player_id"), results.getString("name"));
         }
+        results.close();
+        statement.close();
         return player;
     }
 
-    private God getGodFromDB(int id) {
+    private God getGodFromDB(int id) throws SQLException {
         God god = null;
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM god WHERE god_id = ?");
-            statement.setInt(1, id);
-            ResultSet results = statement.executeQuery();
-            while (results.next()) {
-                god = new God();
-                god.id = results.getInt("god_id");
-                god.name = results.getString("name");
-                god.category = results.getString("category");
-                god.elementId = results.getInt("element_id");
-                god.hp = results.getInt("health");
-            }
-            results.close();
-            statement.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM god WHERE god_id = ?");
+        statement.setInt(1, id);
+        ResultSet results = statement.executeQuery();
+        while (results.next()) {
+            god = new God();
+            god.id = results.getInt("god_id");
+            god.name = results.getString("name");
+            god.category = results.getString("category");
+            god.elementId = results.getInt("element_id");
+            god.hp = results.getInt("health");
+        }
+        results.close();
+        statement.close();
+
+        if (god == null) {
+            throw new RuntimeException();
         }
 
+        god.attacks = getAttacksByGodIdFromDB(god.id);
+
         return god;
+    }
+
+    private ArrayList<Attack> getAttacksByGodIdFromDB(int id) throws SQLException {
+        ArrayList<Attack> attacks = new ArrayList<>();
+        PreparedStatement statement = connection.prepareStatement("SELECT god_attack.god_id, attack.* FROM god_attack JOIN attack ON god_attack.attack_id = attack.attack_id WHERE god_attack.god_id = ?");
+        statement.setInt(1, id);
+        ResultSet results = statement.executeQuery();
+        while (results.next()) {
+            Attack attack = new Attack();
+            attack.id = results.getInt("attack_id");
+            attack.name = results.getString("name");
+            attack.elementId = results.getInt("element_id");
+            attack.damage = results.getInt("base_damage");
+            attacks.add(attack);
+        }
+
+        return attacks;
     }
 
     public String getCurrentPlayer() {
@@ -365,9 +386,9 @@ public class BasicGame implements GameLoop {
 
     private void drawMenu() {
         SaxionApp.clear();
-        SaxionApp.drawImage("BasicGame/menubackground.jpg", 0,0, 1500, 750);
+        SaxionApp.drawImage("BasicGame/menubackground.jpg", 0, 0, 1500, 750);
         SaxionApp.drawImage("BasicGame/botg.png", 250, 50);
-        SaxionApp.drawImage("BasicGame/menuoptions.png", 50,250);
+        SaxionApp.drawImage("BasicGame/menuoptions.png", 50, 250);
         /* SaxionApp.drawBorderedText("1. Battle", 600, 200, 50);
         SaxionApp.drawBorderedText("2. Inventory", 600, 300, 50);
         SaxionApp.drawBorderedText("3. Choose profile", 600, 400, 50);
@@ -378,13 +399,13 @@ public class BasicGame implements GameLoop {
         SaxionApp.clear();
         SaxionApp.drawImage("BasicGame/BattleArena1.jpg", 0, 0, 1500, 750);
 
-        SaxionApp.drawImage("BasicGame/redAbility.png",130,580,100,200);
-        SaxionApp.drawImage("BasicGame/greenAbility.png",250,640,135,80);
-        SaxionApp.drawImage("BasicGame/blueAbility.png",395,640,110,80);
+        SaxionApp.drawImage("BasicGame/redAbility.png", 130, 580, 100, 200);
+        SaxionApp.drawImage("BasicGame/greenAbility.png", 250, 640, 135, 80);
+        SaxionApp.drawImage("BasicGame/blueAbility.png", 395, 640, 110, 80);
 
-        SaxionApp.drawImage("BasicGame/redAbility.png",1260,580,100,200);
-        SaxionApp.drawImage("BasicGame/greenAbility.png",1115,640,135,80);
-        SaxionApp.drawImage("BasicGame/blueAbility.png",995,640,110,80);
+        SaxionApp.drawImage("BasicGame/redAbility.png", 1260, 580, 100, 200);
+        SaxionApp.drawImage("BasicGame/greenAbility.png", 1115, 640, 135, 80);
+        SaxionApp.drawImage("BasicGame/blueAbility.png", 995, 640, 110, 80);
 
         SaxionApp.drawImage("BasicGame/healthBar.png", 200, 35, 345, 35);
 
@@ -397,9 +418,9 @@ public class BasicGame implements GameLoop {
         SaxionApp.setFill(Color.green);
         SaxionApp.drawRectangle(947, 49, getHealthBarWidth(dummy2.hp), 12);//*/
 
-        SaxionApp.drawImage("BasicGame/HeBoCard.png",50,130,80,120);
-        SaxionApp.drawImage("BasicGame/AtlasCard.png",50,320,80,120);
-        SaxionApp.drawImage("BasicGame/blueCard.png",50,510,80,120);
+        SaxionApp.drawImage("BasicGame/HeBoCard.png", 50, 130, 80, 120);
+        SaxionApp.drawImage("BasicGame/AtlasCard.png", 50, 320, 80, 120);
+        SaxionApp.drawImage("BasicGame/blueCard.png", 50, 510, 80, 120);
 
 
         SaxionApp.drawImage("BasicGame/redCard.png", 1370, 130, 80, 120);
@@ -407,9 +428,9 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/blueCard.png", 1370, 510, 80, 120);
     }
 
-    private void characters () {
-        SaxionApp.drawImage(dummy.image,dummy1Position,360,320,270);
-        SaxionApp.drawImage(dummy2.image,dummy2Position,365,470,270);
+    private void characters() {
+        SaxionApp.drawImage(dummy.image, dummy1Position, 360, 320, 270);
+        SaxionApp.drawImage(dummy2.image, dummy2Position, 365, 470, 270);
     }
 
     public int getHealthBarWidth(int hp) {
