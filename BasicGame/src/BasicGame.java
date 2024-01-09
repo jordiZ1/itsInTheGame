@@ -60,21 +60,21 @@ public class BasicGame implements GameLoop {
         players.add("Player 1");
         players.add("Player 2");
 
-        dummy.characterId = 1;
+//        dummy.characterId = 1;
         dummy.hp = 100;
         dummy.name = "Achilles";
         dummy.abilityDamage1 = 15;
         dummy.abilityDamage2 = 20;
         dummy.abilityDamage3 = 25;
-        dummy.image = "BasicGame/AoKuangFaceLeft.png";
+//        dummy.image = "BasicGame/AoKuangFaceLeft.png";
 
-        dummy2.characterId = 2;
+//        dummy2.characterId = 2;
         dummy2.hp = 100;
         dummy2.name = "Ares";
         dummy2.abilityDamage1 = 25;
         dummy2.abilityDamage2 = 15;
         dummy2.abilityDamage3 = 10;
-        dummy2.image = "BasicGame/AchillesFaceRight.png";
+//        dummy2.image = "BasicGame/AchillesFaceRight.png";
     }
 
     @Override
@@ -303,7 +303,11 @@ public class BasicGame implements GameLoop {
         Player player2;
         try {
             player1 = getPlayerFromDB(1); //temporary hardcoded id
+            int[] player1ids = {1, 2, 3};
+            player1.gods = getGodsFromDB(player1ids);
             player2 = getPlayerFromDB(2); //temporary hardcoded id
+            int[] player2ids = {4, 5, 6};
+            player2.gods = getGodsFromDB(player2ids);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -325,29 +329,35 @@ public class BasicGame implements GameLoop {
         return player;
     }
 
-    private God getGodFromDB(int id) throws SQLException {
-        God god = null;
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM god WHERE god_id = ?");
-        statement.setInt(1, id);
-        ResultSet results = statement.executeQuery();
-        while (results.next()) {
-            god = new God();
-            god.id = results.getInt("god_id");
-            god.name = results.getString("name");
-            god.category = results.getString("category");
-            god.elementId = results.getInt("element_id");
-            god.hp = results.getInt("health");
+    private ArrayList<God> getGodsFromDB(int[] ids) throws SQLException {
+        ArrayList<God> gods = new ArrayList<>();
+
+        for (int id : ids) {
+            God god = null;
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM god WHERE god_id = ?");
+            statement.setInt(1, id);
+            ResultSet results = statement.executeQuery();
+            while (results.next()) {
+                god = new God();
+                god.id = results.getInt("god_id");
+                god.name = results.getString("name");
+                god.category = results.getString("category");
+                god.elementId = results.getInt("element_id");
+                god.hp = results.getInt("health");
+            }
+            results.close();
+            statement.close();
+
+            if (god == null) {
+                throw new RuntimeException();
+            }
+
+            god.attacks = getAttacksByGodIdFromDB(god.id);
+
+            gods.add(god);
         }
-        results.close();
-        statement.close();
 
-        if (god == null) {
-            throw new RuntimeException();
-        }
-
-        god.attacks = getAttacksByGodIdFromDB(god.id);
-
-        return god;
+        return gods;
     }
 
     private ArrayList<Attack> getAttacksByGodIdFromDB(int id) throws SQLException {
@@ -363,6 +373,8 @@ public class BasicGame implements GameLoop {
             attack.damage = results.getInt("base_damage");
             attacks.add(attack);
         }
+        results.close();
+        statement.close();
 
         return attacks;
     }
