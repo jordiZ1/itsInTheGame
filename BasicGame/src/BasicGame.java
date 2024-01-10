@@ -10,9 +10,6 @@ import java.util.ArrayList;
 
 public class BasicGame implements GameLoop {
 
-    private int dummy1Position = 1000;
-    private int dummy2Position = 160;
-
     private int selectorX = 1350;
     private int selectorY = 180;
 
@@ -20,63 +17,22 @@ public class BasicGame implements GameLoop {
         SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
     }
 
+    Connection connection = null;
     String currentScreen = "startScreen";
 
-    God dummy = new God();
-    God dummy2 = new God();
-
-    ArrayList<String> players = new ArrayList<>();
+    ArrayList<Player> arenaPlayers = new ArrayList<>();
     int turn;
     boolean turnPlayer1;
-    boolean turnPlayer2 = false;
-
+    private int god1Position = 160;
+    private int god2Position = 1000;
+    private int activeGodPlayer1 = 0;
+    private int activeGodPlayer2 = 0;
     boolean gameActive;
 
-    Connection connection = null;
 
     @Override
     public void init() {
-
         connection = new ConnectDB().getConnection();
-
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet results = statement.executeQuery("SELECT * FROM god");
-            while (results.next()) {
-                System.out.println(results.getString("name"));
-            }
-            results.close();
-            statement.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-
-        turn = 1;
-        turnPlayer1 = true;
-        turnPlayer2 = false;
-
-        gameActive = true;
-
-
-        players.add("Player 1");
-        players.add("Player 2");
-
-        dummy.characterId = 1;
-        dummy.hp = 100;
-        dummy.name = "Achilles";
-        dummy.abilityDamage1 = 15;
-        dummy.abilityDamage2 = 20;
-        dummy.abilityDamage3 = 25;
-        dummy.image = "BasicGame/AoKuangFaceLeft.png";
-
-        dummy2.characterId = 2;
-        dummy2.hp = 100;
-        dummy2.name = "Ares";
-        dummy2.abilityDamage1 = 25;
-        dummy2.abilityDamage2 = 15;
-        dummy2.abilityDamage3 = 10;
-        dummy2.image = "BasicGame/AchillesFaceRight.png";
     }
 
     @Override
@@ -90,30 +46,26 @@ public class BasicGame implements GameLoop {
             case "instructionScreen" -> instructionScreenLoop();
             case "playSelectionScreen" -> playSelectionScreenLoop();
         }
-
     }
 
-    public void startScreenLoop() {drawStarterScreen();
+    public void startScreenLoop() {
+        drawStarterScreen();
     }
+
     public void menuScreenLoop() {
         drawMenu();
     }
+
     public void battleScreenLoop() {
         drawGameBoard();
         characters();
 
         String currentPlayer = getCurrentPlayer();
 
-        // Draws Dummy HP and names
-        /* SaxionApp.drawText(dummy.name, 300, 100, 50);
-        SaxionApp.drawText(String.valueOf(dummy.hp), 300, 200, 50);
-        SaxionApp.drawText(dummy2.name, 1000, 100, 50);
-        SaxionApp.drawText(String.valueOf(dummy2.hp), 1000, 200, 50); */
-
         SaxionApp.drawText("Turn: " + turn, 700, 80, 20);
         SaxionApp.drawText(currentPlayer, 700, 100, 20);
 
-        if (dummy.hp == 0 || dummy2.hp == 0) {
+        /*if (dummy.hp == 0 || dummy2.hp == 0) {
             gameActive = false;
             SaxionApp.drawBorderedText("GAME OVER", 600, 375, 50);
             if (dummy.hp == 0) {
@@ -121,24 +73,22 @@ public class BasicGame implements GameLoop {
             } else if (dummy2.hp == 0) {
                 SaxionApp.drawBorderedText(dummy.name + " Wins!", 650, 425, 30);
             }
-        }
+        }*/
     }
 
-    public void inventoryScreenLoop(){
+    public void inventoryScreenLoop() {
         SaxionApp.clear();
         SaxionApp.drawText("inv", 300, 300, 100);
-
     }
 
-    public void profileScreenLoop(){
+    public void profileScreenLoop() {
         SaxionApp.clear();
         SaxionApp.drawText("profile", 300, 300, 100);
     }
 
-    public void instructionScreenLoop(){
+    public void instructionScreenLoop() {
         SaxionApp.clear();
         SaxionApp.drawText("instr", 300, 300, 100);
-
     }
 
 
@@ -159,7 +109,6 @@ public class BasicGame implements GameLoop {
             case "instructionScreen" -> instructionScreenKeyboardEvent(keyboardEvent);
             case "playSelectionScreen" ->  playSelectionScreenKeyboardEvent(keyboardEvent);
         }
-
     }
 
     public void startScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
@@ -171,136 +120,97 @@ public class BasicGame implements GameLoop {
 
     public void menuScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_1) {
+            setupBattleArena();
             currentScreen = "playSelectionScreen";
-        }
-        else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_2) {
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_2) {
             currentScreen = "inventoryScreen";
-        }
-        else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_3) {
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_3) {
             currentScreen = "profileScreen";
-        }
-        else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_4) {
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_4) {
             currentScreen = "instructionScreen";
         }
-
     }
 
     public void battleScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
-        if (turnPlayer1 && gameActive) {
-            if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Q) {
-                dummy2Position = dummy1Position - 160;
-                new java.util.Timer().schedule(
-                        new java.util.TimerTask() {
-                            @Override
-                            public void run() {
-                                dummy2Position = 160;
-                            }
-                        }
-                        , 1000);
-
-                dummy2.hp = dummy2.hp - dummy.abilityDamage1;
-                turnPlayer2 = true;
-                turnPlayer1 = false;
-                turn++;
-            }
-            if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_W) {
-                dummy2Position = dummy1Position - 160;
-                new java.util.Timer().schedule(
-                        new java.util.TimerTask() {
-                            @Override
-                            public void run() {
-                                dummy2Position = 160;
-                            }
-                        }
-                        , 1000);
-                dummy2.hp = dummy2.hp - dummy.abilityDamage2;
-                turnPlayer2 = true;
-                turnPlayer1 = false;
-                turn++;
-            }
-            if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_E) {
-                dummy2Position = dummy1Position - 160;
-                new java.util.Timer().schedule(
-                        new java.util.TimerTask() {
-                            @Override
-                            public void run() {
-                                dummy2Position = 160;
-                            }
-                        }
-                        , 1000);
-                dummy2.hp = dummy2.hp - dummy.abilityDamage3;
-                turnPlayer2 = true;
-                turnPlayer1 = false;
-                turn++;
-            }
-        } else if (turnPlayer2 && gameActive) {
-            if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Z) {
-                dummy1Position = dummy2Position + 150;
-                new java.util.Timer().schedule(
-                        new java.util.TimerTask() {
-                            @Override
-                            public void run() {
-                                dummy1Position = 1000;
-                            }
-                        }
-                        , 1000);
-
-                dummy.hp = dummy.hp - dummy2.abilityDamage1;
-                turnPlayer1 = true;
-                turnPlayer2 = false;
-                turn++;
-            }
-            if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_X) {
-                dummy1Position = dummy2Position + 150;
-                new java.util.Timer().schedule(
-                        new java.util.TimerTask() {
-                            @Override
-                            public void run() {
-                                dummy1Position = 1000;
-                            }
-                        }
-                        , 1000);
-                dummy.hp = dummy.hp - dummy2.abilityDamage1;
-                turnPlayer1 = true;
-                turnPlayer2 = false;
-                turn++;
-            }
-            if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_C) {
-                dummy1Position = dummy2Position + 150;
-                new java.util.Timer().schedule(
-                        new java.util.TimerTask() {
-                            @Override
-                            public void run() {
-                                dummy1Position = 1000;
-                            }
-                        }
-                        , 1000);
-                dummy.hp = dummy.hp - dummy2.abilityDamage1;
-                turnPlayer1 = true;
-                turnPlayer2 = false;
-                turn++;
+        if (gameActive) {
+            if (turnPlayer1) {
+                if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Q) {
+                    attackAnimation(1);
+                    arenaPlayers.get(1).gods.get(activeGodPlayer2).hp -= arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(0).damage;
+                    turnPlayer1 = false;
+                    turn++;
+                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_W) {
+                    attackAnimation(1);
+                    arenaPlayers.get(1).gods.get(activeGodPlayer2).hp -= arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(1).damage;
+                    turnPlayer1 = false;
+                    turn++;
+                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_E) {
+                    attackAnimation(1);
+                    arenaPlayers.get(1).gods.get(activeGodPlayer2).hp -= arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(2).damage;
+                    turnPlayer1 = false;
+                    turn++;
+                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_1 && activeGodPlayer1 != 0) {
+                    activeGodPlayer1 = 0;
+                    turnPlayer1 = false;
+                    turn++;
+                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_2 && activeGodPlayer1 != 1) {
+                    activeGodPlayer1 = 1;
+                    turnPlayer1 = false;
+                    turn++;
+                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_3 && activeGodPlayer1 != 2) {
+                    activeGodPlayer1 = 2;
+                    turnPlayer1 = false;
+                    turn++;
+                }
+            } else {
+                if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Z) {
+                    attackAnimation(2);
+                    arenaPlayers.get(0).gods.get(activeGodPlayer1).hp -= arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(0).damage;
+                    turnPlayer1 = true;
+                    turn++;
+                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_X) {
+                    attackAnimation(2);
+                    arenaPlayers.get(0).gods.get(activeGodPlayer1).hp -= arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(1).damage;
+                    turnPlayer1 = true;
+                    turn++;
+                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_C) {
+                    attackAnimation(2);
+                    arenaPlayers.get(0).gods.get(activeGodPlayer1).hp -= arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(2).damage;
+                    turnPlayer1 = true;
+                    turn++;
+                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_8 && activeGodPlayer2 != 0) {
+                    activeGodPlayer2 = 0;
+                    turnPlayer1 = true;
+                    turn++;
+                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_9 && activeGodPlayer2 != 1) {
+                    activeGodPlayer2 = 1;
+                    turnPlayer1 = true;
+                    turn++;
+                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_0 && activeGodPlayer2 != 2) {
+                    activeGodPlayer2 = 2;
+                    turnPlayer1 = true;
+                    turn++;
+                }
             }
         }
     }
 
-    public void inventoryScreenKeyboardEvent(KeyboardEvent keyboardEvent){
+    public void inventoryScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
         }
     }
 
-    public void profileScreenKeyboardEvent(KeyboardEvent keyboardEvent){
+    public void profileScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
         }
-
     }
 
-    public void instructionScreenKeyboardEvent(KeyboardEvent keyboardEvent){
+    public void instructionScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
         }
-
     }
 
     public void playSelectionScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
@@ -319,16 +229,102 @@ public class BasicGame implements GameLoop {
 
     }
 
-    public String getCurrentPlayer() {
-        if (turn % 2 == 1) {
-            return players.get(0);
+    private void setupBattleArena() {
+        Player player1;
+        Player player2;
+        try {
+            player1 = getPlayerFromDB(1); //temporary hardcoded id
+            int[] player1ids = {10, 2, 3};
+            player1.gods = getGodsFromDB(player1ids);
+            player2 = getPlayerFromDB(2); //temporary hardcoded id
+            int[] player2ids = {4, 5, 6};
+            player2.gods = getGodsFromDB(player2ids);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
-        return players.get(1);
+        arenaPlayers.add(player1);
+        arenaPlayers.add(player2);
+
+        activeGodPlayer1 = 0;
+        activeGodPlayer2 = 0;
+        turnPlayer1 = true;
+        turn = 1;
+        gameActive = true;
+    }
+
+    private Player getPlayerFromDB(int id) throws SQLException {
+        Player player = null;
+        PreparedStatement statement = connection.prepareStatement("SELECT player_id, name FROM player WHERE player_id = ?");
+        statement.setInt(1, id);
+        ResultSet results = statement.executeQuery();
+        while (results.next()) {
+            player = new Player(results.getInt("player_id"), results.getString("name"));
+        }
+        results.close();
+        statement.close();
+        return player;
+    }
+
+    private ArrayList<God> getGodsFromDB(int[] ids) throws SQLException {
+        ArrayList<God> gods = new ArrayList<>();
+
+        for (int id : ids) {
+            God god = null;
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM god WHERE god_id = ?");
+            statement.setInt(1, id);
+            ResultSet results = statement.executeQuery();
+            while (results.next()) {
+                god = new God();
+                god.id = results.getInt("god_id");
+                god.name = results.getString("name");
+                god.category = results.getString("category");
+                god.elementId = results.getInt("element_id");
+                god.hp = results.getInt("health");
+            }
+            results.close();
+            statement.close();
+
+            if (god == null) {
+                throw new RuntimeException();
+            }
+
+            god.attacks = getAttacksByGodIdFromDB(god.id);
+
+            gods.add(god);
+        }
+
+        return gods;
+    }
+
+    private ArrayList<Attack> getAttacksByGodIdFromDB(int id) throws SQLException {
+        ArrayList<Attack> attacks = new ArrayList<>();
+        PreparedStatement statement = connection.prepareStatement("SELECT god_attack.god_id, attack.* FROM god_attack JOIN attack ON god_attack.attack_id = attack.attack_id WHERE god_attack.god_id = ?");
+        statement.setInt(1, id);
+        ResultSet results = statement.executeQuery();
+        while (results.next()) {
+            Attack attack = new Attack();
+            attack.id = results.getInt("attack_id");
+            attack.name = results.getString("name");
+            attack.elementId = results.getInt("element_id");
+            attack.damage = results.getInt("base_damage");
+            attacks.add(attack);
+        }
+        results.close();
+        statement.close();
+
+        return attacks;
+    }
+
+    public String getCurrentPlayer() {
+        if (turn % 2 == 1) {
+            return arenaPlayers.get(0).name;
+        }
+
+        return arenaPlayers.get(1).name;
     }
 
     private void drawStarterScreen() {
-
         SaxionApp.clear();
         SaxionApp.drawImage("BasicGame/starterscreen.jpg", 0, 0, 1500, 750); //prints background
         SaxionApp.drawImage("BasicGame/botg.png", 250, 50); // Prints game logo
@@ -338,13 +334,9 @@ public class BasicGame implements GameLoop {
 
     private void drawMenu() {
         SaxionApp.clear();
-        SaxionApp.drawImage("BasicGame/menubackground.jpg", 0,0, 1500, 750);
+        SaxionApp.drawImage("BasicGame/menubackground.jpg", 0, 0, 1500, 750);
         SaxionApp.drawImage("BasicGame/botg.png", 250, 50);
-        SaxionApp.drawImage("BasicGame/menuoptions.png", 50,250);
-        /* SaxionApp.drawBorderedText("1. Battle", 600, 200, 50);
-        SaxionApp.drawBorderedText("2. Inventory", 600, 300, 50);
-        SaxionApp.drawBorderedText("3. Choose profile", 600, 400, 50);
-        SaxionApp.drawBorderedText("4. Instructions", 600, 500, 50); */
+        SaxionApp.drawImage("BasicGame/menuoptions.png", 50, 250);
     }
 
 
@@ -382,38 +374,62 @@ public class BasicGame implements GameLoop {
         SaxionApp.clear();
         SaxionApp.drawImage("BasicGame/BattleArena1.jpg", 0, 0, 1500, 750);
 
-        SaxionApp.drawImage("BasicGame/redAbility.png",130,580,100,200);
-        SaxionApp.drawImage("BasicGame/greenAbility.png",250,640,135,80);
-        SaxionApp.drawImage("BasicGame/blueAbility.png",395,640,110,80);
+        SaxionApp.drawImage("BasicGame/redAbility.png", 130, 580, 100, 200);
+        SaxionApp.drawImage("BasicGame/greenAbility.png", 250, 640, 135, 80);
+        SaxionApp.drawImage("BasicGame/blueAbility.png", 395, 640, 110, 80);
 
-        SaxionApp.drawImage("BasicGame/redAbility.png",1260,580,100,200);
-        SaxionApp.drawImage("BasicGame/greenAbility.png",1115,640,135,80);
-        SaxionApp.drawImage("BasicGame/blueAbility.png",995,640,110,80);
+        SaxionApp.drawImage("BasicGame/redAbility.png", 1260, 580, 100, 200);
+        SaxionApp.drawImage("BasicGame/greenAbility.png", 1115, 640, 135, 80);
+        SaxionApp.drawImage("BasicGame/blueAbility.png", 995, 640, 110, 80);
+
+        SaxionApp.turnBorderOff();
+        SaxionApp.setFill(Color.green);
 
         SaxionApp.drawImage("BasicGame/healthBar.png", 200, 35, 345, 35);
-
-        SaxionApp.turnBorderOff();
-        SaxionApp.setFill(Color.green);
-        SaxionApp.drawRectangle(227, 49, getHealthBarWidth(dummy.hp), 12);
+        SaxionApp.drawRectangle(227, 49, getHealthBarWidth(arenaPlayers.get(0).gods.get(activeGodPlayer1).hp), 12);
 
         SaxionApp.drawImage("BasicGame/healthBar.png", 920, 35, 345, 35);
-        SaxionApp.turnBorderOff();
-        SaxionApp.setFill(Color.green);
-        SaxionApp.drawRectangle(947, 49, getHealthBarWidth(dummy2.hp), 12);//*/
+        SaxionApp.drawRectangle(947, 49, getHealthBarWidth(arenaPlayers.get(1).gods.get(activeGodPlayer2).hp), 12);
 
-        SaxionApp.drawImage("BasicGame/HeBoCard.png",50,130,80,120);
-        SaxionApp.drawImage("BasicGame/AtlasCard.png",50,320,80,120);
-        SaxionApp.drawImage("BasicGame/blueCard.png",50,510,80,120);
+        SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(0).gods.get(0).name + "Card.png", 50, 130, 80, 120);
+        SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(0).gods.get(1).name + "Card.png", 50, 320, 80, 120);
+        SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(0).gods.get(2).name + "Card.png", 50, 510, 80, 120);
 
 
-        SaxionApp.drawImage("BasicGame/redCard.png", 1370, 130, 80, 120);
-        SaxionApp.drawImage("BasicGame/greenCard.png", 1370, 320, 80, 120);
-        SaxionApp.drawImage("BasicGame/blueCard.png", 1370, 510, 80, 120);
+        SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(1).gods.get(0).name + "Card.png", 1370, 130, 80, 120);
+        SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(1).gods.get(1).name + "Card.png", 1370, 320, 80, 120);
+        SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(1).gods.get(2).name + "Card.png", 1370, 510, 80, 120);
     }
 
-    private void characters () {
-        SaxionApp.drawImage(dummy.image,dummy1Position,360,320,270);
-        SaxionApp.drawImage(dummy2.image,dummy2Position,365,470,270);
+    private void characters() {
+        SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(0).gods.get(activeGodPlayer1).name + "FaceRight.png", god1Position, 360, 320, 270);
+        SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(1).gods.get(activeGodPlayer2).name + "FaceLeft.png", god2Position, 365, 470, 270);
+    }
+
+    private void attackAnimation(int godNumber) {
+        if (godNumber == 1) {
+            god1Position = 840;
+            new java.util.Timer().schedule(
+                    new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+                            god1Position = 160;
+                        }
+                    },
+                    1000
+            );
+        } else {
+            god2Position = 320;
+            new java.util.Timer().schedule(
+                    new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+                            god2Position = 1000;
+                        }
+                    },
+                    1000
+            );
+        }
     }
 
     public int getHealthBarWidth(int hp) {
@@ -421,8 +437,4 @@ public class BasicGame implements GameLoop {
         return (int) width;
 
     }
-
-
-
-
 }
