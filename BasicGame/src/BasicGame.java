@@ -13,6 +13,9 @@ public class BasicGame implements GameLoop {
     private int dummy1Position = 1000;
     private int dummy2Position = 160;
 
+    private int selectorX = 1350;
+    private int selectorY = 180;
+
     public static void main(String[] args) {
         SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
     }
@@ -85,12 +88,12 @@ public class BasicGame implements GameLoop {
             case "inventoryScreen" -> inventoryScreenLoop();
             case "profileScreen" -> profileScreenLoop();
             case "instructionScreen" -> instructionScreenLoop();
+            case "playSelectionScreen" -> playSelectionScreenLoop();
         }
 
     }
 
-    public void startScreenLoop() {
-        drawStarterScreen();
+    public void startScreenLoop() {drawStarterScreen();
     }
     public void menuScreenLoop() {
         drawMenu();
@@ -135,8 +138,15 @@ public class BasicGame implements GameLoop {
     public void instructionScreenLoop(){
         SaxionApp.clear();
         SaxionApp.drawText("instr", 300, 300, 100);
+
     }
 
+
+    public void playSelectionScreenLoop() {
+        SaxionApp.clear();
+        drawplaySelectionScreen();
+
+    }
 
     @Override
     public void keyboardEvent(KeyboardEvent keyboardEvent) {
@@ -147,6 +157,7 @@ public class BasicGame implements GameLoop {
             case "inventoryScreen" -> inventoryScreenKeyboardEvent(keyboardEvent);
             case "profileScreen" -> profileScreenKeyboardEvent(keyboardEvent);
             case "instructionScreen" -> instructionScreenKeyboardEvent(keyboardEvent);
+            case "playSelectionScreen" ->  playSelectionScreenKeyboardEvent(keyboardEvent);
         }
 
     }
@@ -160,7 +171,7 @@ public class BasicGame implements GameLoop {
 
     public void menuScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_1) {
-            currentScreen = "battleScreen";
+            currentScreen = "playSelectionScreen";
         }
         else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_2) {
             currentScreen = "inventoryScreen";
@@ -292,6 +303,17 @@ public class BasicGame implements GameLoop {
 
     }
 
+    public void playSelectionScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
+
+        if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
+            currentScreen = "menuScreen";
+
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER) {
+            currentScreen = "battleScreen";
+
+        }
+    }
+
     @Override
     public void mouseEvent(MouseEvent mouseEvent) {
 
@@ -323,6 +345,37 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawBorderedText("2. Inventory", 600, 300, 50);
         SaxionApp.drawBorderedText("3. Choose profile", 600, 400, 50);
         SaxionApp.drawBorderedText("4. Instructions", 600, 500, 50); */
+    }
+
+
+    private void drawplaySelectionScreen () {
+
+        SaxionApp.drawImage("BasicGame/AchillesFaceLeft.png", 1300,43, 170,140);
+        SaxionApp.drawImage("BasicGame/AresFaceLeft.png", 1100,50, 210,130);
+        SaxionApp.drawImage("BasicGame/AtlasFaceLeft.png", 945,50, 230,130);
+        SaxionApp.drawImage("BasicGame/ApolloFaceLeft.png", 780,50, 230,130);
+
+        SaxionApp.drawImage("BasicGame/AnhurFaceLeft.png", 1300,230, 185,140);
+        SaxionApp.drawImage("BasicGame/AnubisFaceLeft.png", 1100,230, 210,130);
+        SaxionApp.drawImage("BasicGame/SobekFaceLeft.png", 950,230, 180,130);
+        SaxionApp.drawImage("BasicGame/HorusFaceLeft.png", 800,230, 180,130);
+
+        SaxionApp.drawImage("BasicGame/OdinFaceLeft.png", 1300,400, 180,130);
+        SaxionApp.drawImage("BasicGame/ThorFaceLeft.png", 1100,400, 230,140);
+        SaxionApp.drawImage("BasicGame/TyrFaceLeft.png", 930,400, 215,130);
+        SaxionApp.drawImage("BasicGame/UllrFaceLeft.png", 777,390, 225,145);
+
+        SaxionApp.drawImage("BasicGame/AoKuangFaceLeft.png", 1300,575, 160,130);
+        SaxionApp.drawImage("BasicGame/ErlangShenFaceLeft.png", 1120,575, 180,130);
+        SaxionApp.drawImage("BasicGame/GuanYuFaceLeft.png", 960,574, 190,136);
+        SaxionApp.drawImage("BasicGame/HeBoFaceLeft.png", 780,575, 180,130);
+
+        SaxionApp.drawImage("BasicGame/selectPlayer1.png", 65,50,280,100);
+
+
+
+
+
     }
 
     private void drawGameBoard() {
@@ -368,4 +421,8 @@ public class BasicGame implements GameLoop {
         return (int) width;
 
     }
+
+
+
+
 }
