@@ -237,7 +237,7 @@ public class BasicGame implements GameLoop {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
 
-        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER) {
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER ) {
             currentScreen = "newPlaySelectionScreen";
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_LEFT && keyboardEvent.isKeyPressed()) {
             selectorX = Math.max(maximumValueLeft, currentPositionX - 160);
@@ -262,8 +262,8 @@ public class BasicGame implements GameLoop {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
 
-        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER) {
-            currentScreen = "newPlaySelectionScreen";
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER && keyboardEvent.isKeyPressed()) {
+            currentScreen = "battleScreen";
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_LEFT && keyboardEvent.isKeyPressed()) {
             selectorX = Math.max(maximumValueLeft, currentPositionX - 160);
             currentPositionX = selectorX;
