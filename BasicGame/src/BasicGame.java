@@ -6,12 +6,22 @@ import nl.saxion.app.interaction.MouseEvent;
 
 import java.awt.*;
 import java.sql.*;
+import java.time.temporal.ValueRange;
 import java.util.ArrayList;
 
 public class BasicGame implements GameLoop {
 
     private int selectorX = 1350;
     private int selectorY = 180;
+
+    int currentPositionX = 1350;
+    int currentPositionY = 180;
+
+    final int maximumValueRight = 1350;
+    final int maximumValueLeft = 870;
+
+    int maximumValueUpY = 180;
+    int maximumValueDownY = 720;
 
     public static void main(String[] args) {
         SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
@@ -45,6 +55,7 @@ public class BasicGame implements GameLoop {
             case "profileScreen" -> profileScreenLoop();
             case "instructionScreen" -> instructionScreenLoop();
             case "playSelectionScreen" -> playSelectionScreenLoop();
+            case "newPlaySelectionScreen" -> newPlaySelectionScreenLoop();
         }
     }
 
@@ -94,8 +105,15 @@ public class BasicGame implements GameLoop {
 
     public void playSelectionScreenLoop() {
         SaxionApp.clear();
-        drawplaySelectionScreen();
+        drawPlaySelectionScreen();
+        selector();
+    }
 
+
+    public void newPlaySelectionScreenLoop() {
+        SaxionApp.clear();
+        drawNewSelectionScreen();
+        selector();
     }
 
     @Override
@@ -108,6 +126,7 @@ public class BasicGame implements GameLoop {
             case "profileScreen" -> profileScreenKeyboardEvent(keyboardEvent);
             case "instructionScreen" -> instructionScreenKeyboardEvent(keyboardEvent);
             case "playSelectionScreen" ->  playSelectionScreenKeyboardEvent(keyboardEvent);
+            case "newPlaySelectionScreen" -> newPlaySelectionScreenKeyboardEvent(keyboardEvent);
         }
     }
 
@@ -218,11 +237,53 @@ public class BasicGame implements GameLoop {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
 
-        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER) {
-            currentScreen = "battleScreen";
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER ) {
+            currentScreen = "newPlaySelectionScreen";
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_LEFT && keyboardEvent.isKeyPressed()) {
+            selectorX = Math.max(maximumValueLeft, currentPositionX - 160);
+            currentPositionX = selectorX;
 
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_RIGHT && keyboardEvent.isKeyPressed()) {
+            selectorX = Math.min(maximumValueRight, currentPositionX + 160);
+            currentPositionX =  selectorX;
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_DOWN && keyboardEvent.isKeyPressed()) {
+            selectorY = Math.min(maximumValueDownY, currentPositionY + 180);
+            currentPositionY = selectorY;
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_UP && keyboardEvent.isKeyPressed()) {
+            selectorY = Math.max(maximumValueUpY, currentPositionY - 180);
+            currentPositionY = selectorY;
         }
+
     }
+
+
+    public void newPlaySelectionScreenKeyboardEvent (KeyboardEvent keyboardEvent) {
+
+        if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
+            currentScreen = "menuScreen";
+
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER && keyboardEvent.isKeyPressed()) {
+            currentScreen = "battleScreen";
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_LEFT && keyboardEvent.isKeyPressed()) {
+            selectorX = Math.max(maximumValueLeft, currentPositionX - 160);
+            currentPositionX = selectorX;
+
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_RIGHT && keyboardEvent.isKeyPressed()) {
+            selectorX = Math.min(maximumValueRight, currentPositionX + 160);
+            currentPositionX =  selectorX;
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_DOWN && keyboardEvent.isKeyPressed()) {
+            selectorY = Math.min(maximumValueDownY, currentPositionY + 180);
+            currentPositionY = selectorY;
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_UP && keyboardEvent.isKeyPressed()) {
+            selectorY = Math.max(maximumValueUpY, currentPositionY - 180);
+            currentPositionY = selectorY;
+        }
+
+    }
+
+
+
+
 
     @Override
     public void mouseEvent(MouseEvent mouseEvent) {
@@ -339,29 +400,55 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/menuoptions.png", 50, 250);
     }
 
-    private void drawplaySelectionScreen () {
+    private void drawPlaySelectionScreen () {
         SaxionApp.drawImage("BasicGame/images/gods/AchillesFaceLeft.png", 1300,43, 170,140);
         SaxionApp.drawImage("BasicGame/images/gods/AresFaceLeft.png", 1100,50, 210,130);
-        SaxionApp.drawImage("BasicGame/images/gods/AtlasFaceLeft.png", 945,50, 230,130);
-        SaxionApp.drawImage("BasicGame/images/gods/ApolloFaceLeft.png", 780,50, 230,130);
+        SaxionApp.drawImage("BasicGame/images/gods/AtlasFaceLeft.png", 954,50, 230,130);
+        SaxionApp.drawImage("BasicGame/images/gods/ApolloFaceLeft.png", 762,50, 230,130);
 
-        SaxionApp.drawImage("BasicGame/images/gods/AnhurFaceLeft.png", 1300,230, 185,140);
+        SaxionApp.drawImage("BasicGame/images/gods/AnhurFaceLeft.png", 1280,230, 185,140);
         SaxionApp.drawImage("BasicGame/images/gods/AnubisFaceLeft.png", 1100,230, 210,130);
         SaxionApp.drawImage("BasicGame/images/gods/SobekFaceLeft.png", 950,230, 180,130);
         SaxionApp.drawImage("BasicGame/images/gods/HorusFaceLeft.png", 800,230, 180,130);
 
-        SaxionApp.drawImage("BasicGame/images/gods/OdinFaceLeft.png", 1300,400, 180,130);
-        SaxionApp.drawImage("BasicGame/images/gods/ThorFaceLeft.png", 1100,400, 230,140);
-        SaxionApp.drawImage("BasicGame/images/gods/TyrFaceLeft.png", 930,400, 215,130);
-        SaxionApp.drawImage("BasicGame/images/gods/UllrFaceLeft.png", 777,390, 225,145);
+        SaxionApp.drawImage("BasicGame/images/gods/OdinFaceLeft.png", 1285,410, 180,130);
+        SaxionApp.drawImage("BasicGame/images/gods/ThorFaceLeft.png", 1100,410, 230,140);
+        SaxionApp.drawImage("BasicGame/images/gods/TyrFaceLeft.png", 930,410, 215,130);
+        SaxionApp.drawImage("BasicGame/images/gods/UllrFaceLeft.png", 777,400, 225,145);
 
-        SaxionApp.drawImage("BasicGame/images/gods/AoKuangFaceLeft.png", 1300,575, 160,130);
-        SaxionApp.drawImage("BasicGame/images/gods/ErlangShenFaceLeft.png", 1120,575, 180,130);
-        SaxionApp.drawImage("BasicGame/images/gods/GuanYuFaceLeft.png", 960,574, 190,136);
-        SaxionApp.drawImage("BasicGame/images/gods/HeBoFaceLeft.png", 780,575, 180,130);
+        SaxionApp.drawImage("BasicGame/images/gods/AoKuangFaceLeft.png", 1300,585, 160,130);
+        SaxionApp.drawImage("BasicGame/images/gods/ErlangShenFaceLeft.png", 1120,587, 180,130);
+        SaxionApp.drawImage("BasicGame/images/gods/GuanYuFaceLeft.png", 954,585, 190,136);
+        SaxionApp.drawImage("BasicGame/images/gods/HeBoFaceLeft.png", 780,588, 180,130);
 
         SaxionApp.drawImage("BasicGame/selectPlayer1.png", 65,50,280,100);
     }
+
+
+    private void drawNewSelectionScreen () {
+        SaxionApp.drawImage("BasicGame/images/gods/AchillesFaceLeft.png", 1300,43, 170,140);
+        SaxionApp.drawImage("BasicGame/images/gods/AresFaceLeft.png", 1100,50, 210,130);
+        SaxionApp.drawImage("BasicGame/images/gods/AtlasFaceLeft.png", 954,50, 230,130);
+        SaxionApp.drawImage("BasicGame/images/gods/ApolloFaceLeft.png", 762,50, 230,130);
+
+        SaxionApp.drawImage("BasicGame/images/gods/AnhurFaceLeft.png", 1280,230, 185,140);
+        SaxionApp.drawImage("BasicGame/images/gods/AnubisFaceLeft.png", 1100,230, 210,130);
+        SaxionApp.drawImage("BasicGame/images/gods/SobekFaceLeft.png", 950,230, 180,130);
+        SaxionApp.drawImage("BasicGame/images/gods/HorusFaceLeft.png", 800,230, 180,130);
+
+        SaxionApp.drawImage("BasicGame/images/gods/OdinFaceLeft.png", 1285,410, 180,130);
+        SaxionApp.drawImage("BasicGame/images/gods/ThorFaceLeft.png", 1100,410, 230,140);
+        SaxionApp.drawImage("BasicGame/images/gods/TyrFaceLeft.png", 930,410, 215,130);
+        SaxionApp.drawImage("BasicGame/images/gods/UllrFaceLeft.png", 777,400, 225,145);
+
+        SaxionApp.drawImage("BasicGame/images/gods/AoKuangFaceLeft.png", 1300,585, 160,130);
+        SaxionApp.drawImage("BasicGame/images/gods/ErlangShenFaceLeft.png", 1120,587, 180,130);
+        SaxionApp.drawImage("BasicGame/images/gods/GuanYuFaceLeft.png", 954,585, 190,136);
+        SaxionApp.drawImage("BasicGame/images/gods/HeBoFaceLeft.png", 780,588, 180,130);
+
+        SaxionApp.drawImage("BasicGame/selectPlayer2.png", 65,50,280,100);
+    }
+
 
     private void drawGameBoard() {
         SaxionApp.clear();
@@ -387,6 +474,7 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(0).gods.get(0).name + "Card.png", 50, 130, 80, 120);
         SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(0).gods.get(1).name + "Card.png", 50, 320, 80, 120);
         SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(0).gods.get(2).name + "Card.png", 50, 510, 80, 120);
+
 
 
         SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(1).gods.get(0).name + "Card.png", 1370, 130, 80, 120);
@@ -430,4 +518,15 @@ public class BasicGame implements GameLoop {
         return (int) width;
 
     }
+
+
+
+    public void selector () {
+        SaxionApp.setBorderColor(Color.blue);
+        SaxionApp.setFill(Color.green);
+        SaxionApp.drawRectangle(selectorX,selectorY,60,10);
+
+    }
+
+
 }
