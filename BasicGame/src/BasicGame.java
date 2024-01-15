@@ -136,7 +136,6 @@ public class BasicGame implements GameLoop {
         }
     }
 
-
     public void menuScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_1) {
             setupBattleArena();
@@ -236,13 +235,11 @@ public class BasicGame implements GameLoop {
 
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
-
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER ) {
             currentScreen = "newPlaySelectionScreen";
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_LEFT && keyboardEvent.isKeyPressed()) {
             selectorX = Math.max(maximumValueLeft, currentPositionX - 160);
             currentPositionX = selectorX;
-
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_RIGHT && keyboardEvent.isKeyPressed()) {
             selectorX = Math.min(maximumValueRight, currentPositionX + 160);
             currentPositionX =  selectorX;
@@ -253,21 +250,16 @@ public class BasicGame implements GameLoop {
             selectorY = Math.max(maximumValueUpY, currentPositionY - 180);
             currentPositionY = selectorY;
         }
-
     }
 
-
     public void newPlaySelectionScreenKeyboardEvent (KeyboardEvent keyboardEvent) {
-
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
-
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER && keyboardEvent.isKeyPressed()) {
             currentScreen = "battleScreen";
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_LEFT && keyboardEvent.isKeyPressed()) {
             selectorX = Math.max(maximumValueLeft, currentPositionX - 160);
             currentPositionX = selectorX;
-
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_RIGHT && keyboardEvent.isKeyPressed()) {
             selectorX = Math.min(maximumValueRight, currentPositionX + 160);
             currentPositionX =  selectorX;
@@ -278,12 +270,7 @@ public class BasicGame implements GameLoop {
             selectorY = Math.max(maximumValueUpY, currentPositionY - 180);
             currentPositionY = selectorY;
         }
-
     }
-
-
-
-
 
     @Override
     public void mouseEvent(MouseEvent mouseEvent) {
@@ -392,7 +379,6 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/starttext1.png", 400, 600);//Prints press SPACE to start image
     }
 
-
     private void drawMenu() {
         SaxionApp.clear();
         SaxionApp.drawImage("BasicGame/menubackground.jpg", 0, 0, 1500, 750);
@@ -424,7 +410,6 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/selectPlayer1.png", 65,50,280,100);
     }
 
-
     private void drawNewSelectionScreen () {
         SaxionApp.drawImage("BasicGame/images/gods/AchillesFaceLeft.png", 1300,43, 170,140);
         SaxionApp.drawImage("BasicGame/images/gods/AresFaceLeft.png", 1100,50, 210,130);
@@ -448,7 +433,6 @@ public class BasicGame implements GameLoop {
 
         SaxionApp.drawImage("BasicGame/selectPlayer2.png", 65,50,280,100);
     }
-
 
     private void drawGameBoard() {
         SaxionApp.clear();
@@ -474,8 +458,6 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(0).gods.get(0).name + "Card.png", 50, 130, 80, 120);
         SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(0).gods.get(1).name + "Card.png", 50, 320, 80, 120);
         SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(0).gods.get(2).name + "Card.png", 50, 510, 80, 120);
-
-
 
         SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(1).gods.get(0).name + "Card.png", 1370, 130, 80, 120);
         SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(1).gods.get(1).name + "Card.png", 1370, 320, 80, 120);
@@ -516,17 +498,11 @@ public class BasicGame implements GameLoop {
     public int getHealthBarWidth(int hp) {
         double width = ((double) hp / 100) * 300;
         return (int) width;
-
     }
-
-
 
     public void selector () {
         SaxionApp.setBorderColor(Color.blue);
         SaxionApp.setFill(Color.green);
         SaxionApp.drawRectangle(selectorX,selectorY,60,10);
-
     }
-
-
 }
