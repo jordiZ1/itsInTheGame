@@ -6,7 +6,6 @@ import nl.saxion.app.interaction.MouseEvent;
 
 import java.awt.*;
 import java.sql.*;
-import java.time.temporal.ValueRange;
 import java.util.ArrayList;
 
 public class BasicGame implements GameLoop {
@@ -102,13 +101,11 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawText("instr", 300, 300, 100);
     }
 
-
     public void playSelectionScreenLoop() {
         SaxionApp.clear();
         drawPlaySelectionScreen();
         selector();
     }
-
 
     public void newPlaySelectionScreenLoop() {
         SaxionApp.clear();
@@ -232,7 +229,6 @@ public class BasicGame implements GameLoop {
     }
 
     public void playSelectionScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
-
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER ) {
