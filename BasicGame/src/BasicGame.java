@@ -152,16 +152,19 @@ public class BasicGame implements GameLoop {
                 if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Q) {
                     attackAnimation(1);
                     arenaPlayers.get(1).gods.get(activeGodPlayer2).hp -= arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(0).damage;
+                    arenaPlayers.get(0).gods.get(activeGodPlayer1).hp += arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(0).healing;
                     turnPlayer1 = false;
                     turn++;
                 } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_W) {
                     attackAnimation(1);
                     arenaPlayers.get(1).gods.get(activeGodPlayer2).hp -= arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(1).damage;
+                    arenaPlayers.get(0).gods.get(activeGodPlayer1).hp += arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(1).healing;
                     turnPlayer1 = false;
                     turn++;
                 } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_E) {
                     attackAnimation(1);
                     arenaPlayers.get(1).gods.get(activeGodPlayer2).hp -= arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(2).damage;
+                    arenaPlayers.get(0).gods.get(activeGodPlayer1).hp += arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(2).healing;
                     turnPlayer1 = false;
                     turn++;
                 } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_1 && activeGodPlayer1 != 0) {
@@ -181,16 +184,19 @@ public class BasicGame implements GameLoop {
                 if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Z) {
                     attackAnimation(2);
                     arenaPlayers.get(0).gods.get(activeGodPlayer1).hp -= arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(0).damage;
+                    arenaPlayers.get(1).gods.get(activeGodPlayer2).hp += arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(0).healing;
                     turnPlayer1 = true;
                     turn++;
                 } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_X) {
                     attackAnimation(2);
                     arenaPlayers.get(0).gods.get(activeGodPlayer1).hp -= arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(1).damage;
+                    arenaPlayers.get(1).gods.get(activeGodPlayer2).hp += arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(1).healing;
                     turnPlayer1 = true;
                     turn++;
                 } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_C) {
                     attackAnimation(2);
                     arenaPlayers.get(0).gods.get(activeGodPlayer1).hp -= arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(2).damage;
+                    arenaPlayers.get(1).gods.get(activeGodPlayer2).hp += arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(2).healing;
                     turnPlayer1 = true;
                     turn++;
                 } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_8 && activeGodPlayer2 != 0) {
@@ -245,6 +251,8 @@ public class BasicGame implements GameLoop {
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_UP && keyboardEvent.isKeyPressed()) {
             selectorY = Math.max(maximumValueUpY, currentPositionY - 180);
             currentPositionY = selectorY;
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_SPACE) {
+
         }
     }
 
@@ -281,7 +289,7 @@ public class BasicGame implements GameLoop {
             int[] player1ids = {10, 2, 3};
             player1.gods = getGodsFromDB(player1ids);
             player2 = getPlayerFromDB(2); //temporary hardcoded id
-            int[] player2ids = {4, 5, 6};
+            int[] player2ids = {4, 5, 9};
             player2.gods = getGodsFromDB(player2ids);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -352,6 +360,7 @@ public class BasicGame implements GameLoop {
             attack.name = results.getString("name");
             attack.elementId = results.getInt("element_id");
             attack.damage = results.getInt("base_damage");
+            attack.healing = results.getInt("healing");
             attacks.add(attack);
         }
         results.close();
