@@ -56,6 +56,7 @@ public class BasicGame implements GameLoop {
             case "instructionScreen" -> instructionScreenLoop();
             case "playSelectionScreen" -> playSelectionScreenLoop();
             case "newPlaySelectionScreen" -> newPlaySelectionScreenLoop();
+            case "endScreen" -> endScreenLoop();
         }
     }
 
@@ -76,15 +77,20 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawText("Turn: " + turn, 700, 80, 20);
         SaxionApp.drawText(currentPlayer, 700, 100, 20);
 
-        /*if (dummy.hp == 0 || dummy2.hp == 0) {
+        if (arenaPlayers.get(0).gods.get(0).hp <= 0 && arenaPlayers.get(0).gods.get(1).hp <= 0 && arenaPlayers.get(0).gods.get(2).hp <= 0
+            || arenaPlayers.get(1).gods.get(0).hp <= 0 && arenaPlayers.get(1).gods.get(1).hp <= 0 && arenaPlayers.get(1).gods.get(2).hp <= 0) {
             gameActive = false;
             SaxionApp.drawBorderedText("GAME OVER", 600, 375, 50);
-            if (dummy.hp == 0) {
-                SaxionApp.drawBorderedText(dummy2.name + " Wins!", 650, 425, 30);
-            } else if (dummy2.hp == 0) {
-                SaxionApp.drawBorderedText(dummy.name + " Wins!", 650, 425, 30);
+            if (arenaPlayers.get(0).gods.get(0).hp <= 0 && arenaPlayers.get(0).gods.get(1).hp <= 0 && arenaPlayers.get(0).gods.get(2).hp <= 0 ) {
+                SaxionApp.drawBorderedText(arenaPlayers.get(1).name + " Wins!", 650, 425, 30);
+            } else if (arenaPlayers.get(1).gods.get(0).hp <= 0 && arenaPlayers.get(1).gods.get(1).hp <= 0 && arenaPlayers.get(1).gods.get(2).hp <= 0 ) {
+                SaxionApp.drawBorderedText(arenaPlayers.get(0).name + " Wins!", 650, 425, 30);
             }
-        }*/
+        }
+    }
+
+    public void endScreenLoop(){
+        drawEndScreen();
     }
 
     public void inventoryScreenLoop() {
@@ -127,6 +133,7 @@ public class BasicGame implements GameLoop {
             case "instructionScreen" -> instructionScreenKeyboardEvent(keyboardEvent);
             case "playSelectionScreen" ->  playSelectionScreenKeyboardEvent(keyboardEvent);
             case "newPlaySelectionScreen" -> newPlaySelectionScreenKeyboardEvent(keyboardEvent);
+            case "endScreen" -> endScreenKeyboardEvent(keyboardEvent);
         }
     }
 
@@ -153,17 +160,17 @@ public class BasicGame implements GameLoop {
     public void battleScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (gameActive) {
             if (turnPlayer1) {
-                if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Q) {
+                if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Q && arenaPlayers.get(0).gods.get(activeGodPlayer1).hp > 0) {
                     attackAnimation(1);
                     arenaPlayers.get(1).gods.get(activeGodPlayer2).hp -= arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(0).damage;
                     turnPlayer1 = false;
                     turn++;
-                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_W) {
+                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_W && arenaPlayers.get(0).gods.get(activeGodPlayer1).hp > 0) {
                     attackAnimation(1);
                     arenaPlayers.get(1).gods.get(activeGodPlayer2).hp -= arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(1).damage;
                     turnPlayer1 = false;
                     turn++;
-                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_E) {
+                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_E && arenaPlayers.get(0).gods.get(activeGodPlayer1).hp > 0) {
                     attackAnimation(1);
                     arenaPlayers.get(1).gods.get(activeGodPlayer2).hp -= arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(2).damage;
                     turnPlayer1 = false;
@@ -182,17 +189,17 @@ public class BasicGame implements GameLoop {
                     turn++;
                 }
             } else {
-                if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Z) {
+                if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Z && arenaPlayers.get(1).gods.get(activeGodPlayer2).hp > 0) {
                     attackAnimation(2);
                     arenaPlayers.get(0).gods.get(activeGodPlayer1).hp -= arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(0).damage;
                     turnPlayer1 = true;
                     turn++;
-                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_X) {
+                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_X && arenaPlayers.get(1).gods.get(activeGodPlayer2).hp > 0) {
                     attackAnimation(2);
                     arenaPlayers.get(0).gods.get(activeGodPlayer1).hp -= arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(1).damage;
                     turnPlayer1 = true;
                     turn++;
-                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_C) {
+                } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_C && arenaPlayers.get(1).gods.get(activeGodPlayer2).hp > 0) {
                     attackAnimation(2);
                     arenaPlayers.get(0).gods.get(activeGodPlayer1).hp -= arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(2).damage;
                     turnPlayer1 = true;
@@ -212,6 +219,14 @@ public class BasicGame implements GameLoop {
                 }
             }
         }
+        if (!gameActive && keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER){
+            currentScreen = "endScreen";
+        }
+    }
+
+    public void endScreenKeyboardEvent(KeyboardEvent keyboardEvent){
+        if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER)
+            currentScreen = "menuScreen";
     }
 
     public void inventoryScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
@@ -480,6 +495,11 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(1).gods.get(0).name + "Card.png", 1370, 130, 80, 120);
         SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(1).gods.get(1).name + "Card.png", 1370, 320, 80, 120);
         SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(1).gods.get(2).name + "Card.png", 1370, 510, 80, 120);
+    }
+
+    public void drawEndScreen(){
+        SaxionApp.clear();
+        SaxionApp.drawImage("BasicGame/background endscreen.jpg",0,0);
     }
 
     private void characters() {
