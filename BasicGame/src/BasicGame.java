@@ -252,7 +252,7 @@ public class BasicGame implements GameLoop {
             selectorY = Math.max(maximumValueUpY, currentPositionY - 180);
             currentPositionY = selectorY;
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_SPACE) {
-
+            int godId = getGodIdFromSelector();
         }
     }
 
@@ -274,6 +274,10 @@ public class BasicGame implements GameLoop {
             selectorY = Math.max(maximumValueUpY, currentPositionY - 180);
             currentPositionY = selectorY;
         }
+    }
+
+    private int getGodIdFromSelector() {
+
     }
 
     @Override
@@ -409,7 +413,7 @@ public class BasicGame implements GameLoop {
 
         SaxionApp.drawImage("BasicGame/images/gods/AoKuangFaceLeft.png", 1300,585, 160,130);
         SaxionApp.drawImage("BasicGame/images/gods/ErlangShenFaceLeft.png", 1120,587, 180,130);
-        SaxionApp.drawImage("BasicGame/images/gods/GuanYuFaceLeft.png", 954,585, 190,136);
+        SaxionApp.drawImage("BasicGame/images/gods/Guan YuFaceLeft.png", 954,585, 190,136);
         SaxionApp.drawImage("BasicGame/images/gods/HeBoFaceLeft.png", 780,588, 180,130);
 
         SaxionApp.drawImage("BasicGame/selectPlayer1.png", 65,50,280,100);
@@ -433,7 +437,7 @@ public class BasicGame implements GameLoop {
 
         SaxionApp.drawImage("BasicGame/images/gods/AoKuangFaceLeft.png", 1300,585, 160,130);
         SaxionApp.drawImage("BasicGame/images/gods/ErlangShenFaceLeft.png", 1120,587, 180,130);
-        SaxionApp.drawImage("BasicGame/images/gods/GuanYuFaceLeft.png", 954,585, 190,136);
+        SaxionApp.drawImage("BasicGame/images/gods/Guan YuFaceLeft.png", 954,585, 190,136);
         SaxionApp.drawImage("BasicGame/images/gods/HeBoFaceLeft.png", 780,588, 180,130);
 
         SaxionApp.drawImage("BasicGame/selectPlayer2.png", 65,50,280,100);
@@ -443,13 +447,13 @@ public class BasicGame implements GameLoop {
         SaxionApp.clear();
         SaxionApp.drawImage("BasicGame/BattleArena1.jpg", 0, 0, 1500, 750);
 
-        SaxionApp.drawImage("BasicGame/redAbility.png", 130, 580, 100, 200);
-        SaxionApp.drawImage("BasicGame/greenAbility.png", 250, 640, 135, 80);
-        SaxionApp.drawImage("BasicGame/blueAbility.png", 395, 640, 110, 80);
+        SaxionApp.drawImage("BasicGame/AB" + arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(0).name + ".png", 130, 640, 100, 100);
+        SaxionApp.drawImage("BasicGame/AB" + arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(1).name + ".png", 250, 640, 100, 100);
+        SaxionApp.drawImage("BasicGame/AB" + arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(2).name + ".png", 395, 640, 100, 100);
 
-        SaxionApp.drawImage("BasicGame/redAbility.png", 1260, 580, 100, 200);
-        SaxionApp.drawImage("BasicGame/greenAbility.png", 1115, 640, 135, 80);
-        SaxionApp.drawImage("BasicGame/blueAbility.png", 995, 640, 110, 80);
+        SaxionApp.drawImage("BasicGame/AB" + arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(0).name + ".png", 1260, 640, 100, 100);
+        SaxionApp.drawImage("BasicGame/AB" + arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(1).name + ".png", 1115, 640, 100, 100);
+        SaxionApp.drawImage("BasicGame/AB" + arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(2).name + ".png", 995, 640, 100, 100);
 
         SaxionApp.turnBorderOff();
         SaxionApp.setFill(Color.green);
