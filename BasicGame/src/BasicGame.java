@@ -22,6 +22,9 @@ public class BasicGame implements GameLoop {
     int maximumValueUpY = 180;
     int maximumValueDownY = 720;
 
+    ArrayList<Integer> godsSelectedPlayer1 = new ArrayList<>();
+    ArrayList<Integer> godsSelectedPlayer2 = new ArrayList<>();
+
     public static void main(String[] args) {
         SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
     }
@@ -135,7 +138,6 @@ public class BasicGame implements GameLoop {
 
     public void menuScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_1) {
-            setupBattleArena();
             currentScreen = "playSelectionScreen";
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_2) {
             currentScreen = "inventoryScreen";
@@ -238,7 +240,9 @@ public class BasicGame implements GameLoop {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER ) {
-            currentScreen = "newPlaySelectionScreen";
+            if (godsSelectedPlayer1.size() == 3) {
+                currentScreen = "newPlaySelectionScreen";
+            }
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_LEFT && keyboardEvent.isKeyPressed()) {
             selectorX = Math.max(maximumValueLeft, currentPositionX - 160);
             currentPositionX = selectorX;
@@ -251,8 +255,14 @@ public class BasicGame implements GameLoop {
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_UP && keyboardEvent.isKeyPressed()) {
             selectorY = Math.max(maximumValueUpY, currentPositionY - 180);
             currentPositionY = selectorY;
-        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_SPACE) {
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_SPACE && keyboardEvent.isKeyPressed()) {
             int godId = getGodIdFromSelector();
+
+            if (godsSelectedPlayer1.size() < 3 && !godsSelectedPlayer1.contains(godId)) {
+                godsSelectedPlayer1.add(godId);
+            } else if (godsSelectedPlayer1.contains(godId)) {
+                godsSelectedPlayer1.remove(Integer.valueOf(godId));
+            }
         }
     }
 
@@ -260,7 +270,10 @@ public class BasicGame implements GameLoop {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER && keyboardEvent.isKeyPressed()) {
-            currentScreen = "battleScreen";
+            if (godsSelectedPlayer2.size() == 3) {
+                setupBattleArena();
+                currentScreen = "battleScreen";
+            }
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_LEFT && keyboardEvent.isKeyPressed()) {
             selectorX = Math.max(maximumValueLeft, currentPositionX - 160);
             currentPositionX = selectorX;
@@ -273,16 +286,31 @@ public class BasicGame implements GameLoop {
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_UP && keyboardEvent.isKeyPressed()) {
             selectorY = Math.max(maximumValueUpY, currentPositionY - 180);
             currentPositionY = selectorY;
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_SPACE && keyboardEvent.isKeyPressed()) {
+            int godId = getGodIdFromSelector();
+
+            if (godsSelectedPlayer2.size() < 3 && !godsSelectedPlayer2.contains(godId)) {
+                godsSelectedPlayer2.add(godId);
+            } else if (godsSelectedPlayer2.contains(godId)) {
+                godsSelectedPlayer2.remove(Integer.valueOf(godId));
+            }
         }
     }
 
     private int getGodIdFromSelector() {
+        int counter = 1;
 
-    }
+        for (int i = 180; i <= 720; i += 180) {
+            for (int j = 870; j <= 1350; j += 160) {
+                if (i == currentPositionY && j == currentPositionX) {
+                    return counter;
+                }
 
-    @Override
-    public void mouseEvent(MouseEvent mouseEvent) {
+                counter++;
+            }
+        }
 
+        return 0;
     }
 
     private void setupBattleArena() {
@@ -290,11 +318,9 @@ public class BasicGame implements GameLoop {
         Player player2;
         try {
             player1 = getPlayerFromDB(1); //temporary hardcoded id
-            int[] player1ids = {10, 2, 3};
-            player1.gods = getGodsFromDB(player1ids);
+            player1.gods = getGodsFromDB(godsSelectedPlayer1);
             player2 = getPlayerFromDB(2); //temporary hardcoded id
-            int[] player2ids = {4, 5, 9};
-            player2.gods = getGodsFromDB(player2ids);
+            player2.gods = getGodsFromDB(godsSelectedPlayer2);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -322,7 +348,7 @@ public class BasicGame implements GameLoop {
         return player;
     }
 
-    private ArrayList<God> getGodsFromDB(int[] ids) throws SQLException {
+    private ArrayList<God> getGodsFromDB(ArrayList<Integer> ids) throws SQLException {
         ArrayList<God> gods = new ArrayList<>();
 
         for (int id : ids) {
@@ -514,4 +540,7 @@ public class BasicGame implements GameLoop {
         SaxionApp.setFill(Color.green);
         SaxionApp.drawRectangle(selectorX,selectorY,60,10);
     }
+
+    @Override
+    public void mouseEvent(MouseEvent mouseEvent) {}
 }
