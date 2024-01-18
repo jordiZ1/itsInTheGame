@@ -39,6 +39,8 @@ public class BasicGame implements GameLoop {
     private int activeGodPlayer2 = 0;
     boolean gameActive;
 
+    int winnerGame;
+
 
     @Override
     public void init() {
@@ -69,8 +71,10 @@ public class BasicGame implements GameLoop {
     }
 
     public void battleScreenLoop() {
+        resetArena();
         drawGameBoard();
         characters();
+
 
         String currentPlayer = getCurrentPlayer();
 
@@ -83,24 +87,34 @@ public class BasicGame implements GameLoop {
             SaxionApp.drawBorderedText("GAME OVER", 600, 375, 50);
             if (arenaPlayers.get(0).gods.get(0).hp <= 0 && arenaPlayers.get(0).gods.get(1).hp <= 0 && arenaPlayers.get(0).gods.get(2).hp <= 0 ) {
                 SaxionApp.drawBorderedText(arenaPlayers.get(1).name + " Wins!", 650, 425, 30);
+                winnerGame = 0;
             } else if (arenaPlayers.get(1).gods.get(0).hp <= 0 && arenaPlayers.get(1).gods.get(1).hp <= 0 && arenaPlayers.get(1).gods.get(2).hp <= 0 ) {
                 SaxionApp.drawBorderedText(arenaPlayers.get(0).name + " Wins!", 650, 425, 30);
+                winnerGame = 1;
             }
+            SaxionApp.drawBorderedText("Press ENTER to continue...", 550, 500,50);
+
+
         }
     }
 
     public void endScreenLoop(){
+        SaxionApp.clear();
         drawEndScreen();
     }
 
     public void inventoryScreenLoop() {
         SaxionApp.clear();
-        SaxionApp.drawText("inv", 300, 300, 100);
+        SaxionApp.drawImage("BasicGame/background endscreen.jpg",0,0, 1500,750);
+        SaxionApp.setFill(Color.yellow);
+        SaxionApp.drawBorderedText("Coming Soon...", 450, 350, 100);
     }
 
     public void profileScreenLoop() {
         SaxionApp.clear();
-        SaxionApp.drawText("profile", 300, 300, 100);
+        SaxionApp.drawImage("BasicGame/background endscreen.jpg",0,0, 1500,750);
+        SaxionApp.setFill(Color.yellow);
+        SaxionApp.drawBorderedText("Coming Soon...", 450, 350, 100);
     }
 
     public void instructionScreenLoop() {
@@ -120,6 +134,7 @@ public class BasicGame implements GameLoop {
         SaxionApp.clear();
         drawNewSelectionScreen();
         selector();
+        SaxionApp.sleep(1);
     }
 
     @Override
@@ -225,8 +240,9 @@ public class BasicGame implements GameLoop {
     }
 
     public void endScreenKeyboardEvent(KeyboardEvent keyboardEvent){
-        if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER)
+        if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_SPACE) {
             currentScreen = "menuScreen";
+        }
     }
 
     public void inventoryScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
@@ -498,8 +514,21 @@ public class BasicGame implements GameLoop {
     }
 
     public void drawEndScreen(){
-        SaxionApp.clear();
-        SaxionApp.drawImage("BasicGame/background endscreen.jpg",0,0);
+        SaxionApp.drawImage("BasicGame/background endscreen.jpg",0,0, 1500,750);
+
+        SaxionApp.setBorderColor(Color.black);
+        SaxionApp.setFill(Color.cyan);
+        SaxionApp.drawBorderedText(arenaPlayers.get(winnerGame).name + " has won the game in " + turn + " turns!", 325, 200, 50);
+
+        SaxionApp.drawBorderedText("Press SPACE to continue...",525,300,40);
+
+        SaxionApp.setFill(Color.black);
+        SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(winnerGame).gods.get(0).name + "Card.png", 350, 425, 100, 140);
+        SaxionApp.drawBorderedText(arenaPlayers.get(winnerGame).gods.get(0).name,360,400, 25);
+        SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(winnerGame).gods.get(1).name + "Card.png", 700, 425, 100, 140);
+        SaxionApp.drawBorderedText(arenaPlayers.get(winnerGame).gods.get(1).name,710,400, 25);
+        SaxionApp.drawImage("BasicGame/images/gods/" + arenaPlayers.get(winnerGame).gods.get(2).name + "Card.png", 1050, 425, 100, 140);
+        SaxionApp.drawBorderedText(arenaPlayers.get(winnerGame).gods.get(2).name,1060,400, 25);
     }
 
     private void characters() {
@@ -546,6 +575,11 @@ public class BasicGame implements GameLoop {
         SaxionApp.setFill(Color.green);
         SaxionApp.drawRectangle(selectorX,selectorY,60,10);
 
+    }
+
+    public void resetArena() {
+        winnerGame = 99;
+        turn = 1;
     }
 
 
