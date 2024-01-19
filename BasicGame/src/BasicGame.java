@@ -23,7 +23,9 @@ public class BasicGame implements GameLoop {
     int maximumValueDownY = 720;
 
     ArrayList<Integer> godsSelectedPlayer1 = new ArrayList<>();
+    ArrayList<God> godsPlayer1 = new ArrayList<>();
     ArrayList<Integer> godsSelectedPlayer2 = new ArrayList<>();
+    ArrayList<God> godsPlayer2 = new ArrayList<>();
 
     public static void main(String[] args) {
         SaxionApp.startGameLoop(new BasicGame(), 1500, 750, 40);
@@ -257,13 +259,15 @@ public class BasicGame implements GameLoop {
             currentPositionY = selectorY;
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_SPACE && keyboardEvent.isKeyPressed()) {
             int godId = getGodIdFromSelector();
-            God god = getGodFromDB(godId);
 
             if (godsSelectedPlayer1.size() < 3 && !godsSelectedPlayer1.contains(godId)) {
                 godsSelectedPlayer1.add(godId);
             } else if (godsSelectedPlayer1.contains(godId)) {
                 godsSelectedPlayer1.remove(Integer.valueOf(godId));
             }
+
+            godsPlayer1 = getGodsFromDB(godsSelectedPlayer1);
+            System.out.println(godsSelectedPlayer1);
         }
     }
 
@@ -295,15 +299,17 @@ public class BasicGame implements GameLoop {
             } else if (godsSelectedPlayer2.contains(godId)) {
                 godsSelectedPlayer2.remove(Integer.valueOf(godId));
             }
+
+            godsPlayer2 = getGodsFromDB(godsSelectedPlayer2);
         }
     }
 
     private int getGodIdFromSelector() {
         int counter = 1;
 
-        for (int i = 180; i <= 720; i += 180) {
-            for (int j = 870; j <= 1350; j += 160) {
-                if (i == currentPositionY && j == currentPositionX) {
+        for (int y = 180; y <= 720; y += 180) {
+            for (int x = 1350; x >= 870; x -= 160) {
+                if (y == currentPositionY && x == currentPositionX) {
                     return counter;
                 }
 
@@ -319,9 +325,9 @@ public class BasicGame implements GameLoop {
         Player player2;
         try {
             player1 = getPlayerFromDB(1); //temporary hardcoded id
-            player1.gods = getGodsFromDB(godsSelectedPlayer1);
+            player1.gods = godsPlayer1;
             player2 = getPlayerFromDB(2); //temporary hardcoded id
-            player2.gods = getGodsFromDB(godsSelectedPlayer2);
+            player2.gods = godsPlayer2;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -371,30 +377,34 @@ public class BasicGame implements GameLoop {
         return god;
     }
 
-    private ArrayList<God> getGodsFromDB(ArrayList<Integer> ids) throws SQLException {
+    private ArrayList<God> getGodsFromDB(ArrayList<Integer> ids) {
         ArrayList<God> gods = new ArrayList<>();
 
         for (int id : ids) {
             God god = null;
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM god WHERE god_id = ?");
-            statement.setInt(1, id);
-            ResultSet results = statement.executeQuery();
-            while (results.next()) {
-                god = new God();
-                god.id = results.getInt("god_id");
-                god.name = results.getString("name");
-                god.category = results.getString("category");
-                god.elementId = results.getInt("element_id");
-                god.hp = results.getInt("health");
-            }
-            results.close();
-            statement.close();
+            try {
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM god WHERE god_id = ?");
+                statement.setInt(1, id);
+                ResultSet results = statement.executeQuery();
+                while (results.next()) {
+                    god = new God();
+                    god.id = results.getInt("god_id");
+                    god.name = results.getString("name");
+                    god.category = results.getString("category");
+                    god.elementId = results.getInt("element_id");
+                    god.hp = results.getInt("health");
+                }
+                results.close();
+                statement.close();
 
-            if (god == null) {
-                throw new RuntimeException();
-            }
+                if (god == null) {
+                    throw new RuntimeException();
+                }
 
-            god.attacks = getAttacksByGodIdFromDB(god.id);
+                god.attacks = getAttacksByGodIdFromDB(god.id);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
             gods.add(god);
         }
@@ -445,30 +455,26 @@ public class BasicGame implements GameLoop {
     }
 
     private void drawPlaySelectionScreen () {
-        SaxionApp.drawImage("BasicGame/images/gods/AchillesFaceLeft.png", 1300,43, 170,140);
-        SaxionApp.drawImage("BasicGame/images/gods/AresFaceLeft.png", 1100,50, 210,130);
-        SaxionApp.drawImage("BasicGame/images/gods/AtlasFaceLeft.png", 954,50, 230,130);
-        SaxionApp.drawImage("BasicGame/images/gods/ApolloFaceLeft.png", 762,50, 230,130);
-
-        SaxionApp.drawImage("BasicGame/images/gods/AnhurFaceLeft.png", 1280,230, 185,140);
-        SaxionApp.drawImage("BasicGame/images/gods/AnubisFaceLeft.png", 1100,230, 210,130);
-        SaxionApp.drawImage("BasicGame/images/gods/SobekFaceLeft.png", 950,230, 180,130);
-        SaxionApp.drawImage("BasicGame/images/gods/HorusFaceLeft.png", 800,230, 180,130);
-
-        SaxionApp.drawImage("BasicGame/images/gods/OdinFaceLeft.png", 1285,410, 180,130);
-        SaxionApp.drawImage("BasicGame/images/gods/ThorFaceLeft.png", 1100,410, 230,140);
-        SaxionApp.drawImage("BasicGame/images/gods/TyrFaceLeft.png", 930,410, 215,130);
-        SaxionApp.drawImage("BasicGame/images/gods/UllrFaceLeft.png", 777,400, 225,145);
-
-        SaxionApp.drawImage("BasicGame/images/gods/AoKuangFaceLeft.png", 1300,585, 160,130);
-        SaxionApp.drawImage("BasicGame/images/gods/ErlangShenFaceLeft.png", 1120,587, 180,130);
-        SaxionApp.drawImage("BasicGame/images/gods/Guan YuFaceLeft.png", 954,585, 190,136);
-        SaxionApp.drawImage("BasicGame/images/gods/HeBoFaceLeft.png", 780,588, 180,130);
+        drawGenericPlaySelectionScreen();
 
         SaxionApp.drawImage("BasicGame/selectPlayer1.png", 65,50,280,100);
+
+        for (God god : godsPlayer1) {
+            SaxionApp.drawImage("BasicGame/images/gods/" + god.name + "FaceLeft.png", 65, 230, 180, 130);
+        }
     }
 
     private void drawNewSelectionScreen () {
+        drawGenericPlaySelectionScreen();
+
+        SaxionApp.drawImage("BasicGame/selectPlayer2.png", 65,50,280,100);
+
+        for (God god : godsPlayer2) {
+            SaxionApp.drawImage("BasicGame/images/gods/" + god.name + "FaceLeft.png", 65, 230, 180, 130);
+        }
+    }
+
+    private void drawGenericPlaySelectionScreen() {
         SaxionApp.drawImage("BasicGame/images/gods/AchillesFaceLeft.png", 1300,43, 170,140);
         SaxionApp.drawImage("BasicGame/images/gods/AresFaceLeft.png", 1100,50, 210,130);
         SaxionApp.drawImage("BasicGame/images/gods/AtlasFaceLeft.png", 954,50, 230,130);
@@ -484,25 +490,23 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/images/gods/TyrFaceLeft.png", 930,410, 215,130);
         SaxionApp.drawImage("BasicGame/images/gods/UllrFaceLeft.png", 777,400, 225,145);
 
-        SaxionApp.drawImage("BasicGame/images/gods/AoKuangFaceLeft.png", 1300,585, 160,130);
-        SaxionApp.drawImage("BasicGame/images/gods/ErlangShenFaceLeft.png", 1120,587, 180,130);
+        SaxionApp.drawImage("BasicGame/images/gods/Ao KuangFaceLeft.png", 1300,585, 160,130);
+        SaxionApp.drawImage("BasicGame/images/gods/Erlang ShenFaceLeft.png", 1120,587, 180,130);
         SaxionApp.drawImage("BasicGame/images/gods/Guan YuFaceLeft.png", 954,585, 190,136);
-        SaxionApp.drawImage("BasicGame/images/gods/HeBoFaceLeft.png", 780,588, 180,130);
-
-        SaxionApp.drawImage("BasicGame/selectPlayer2.png", 65,50,280,100);
+        SaxionApp.drawImage("BasicGame/images/gods/He BoFaceLeft.png", 780,588, 180,130);
     }
 
     private void drawGameBoard() {
         SaxionApp.clear();
         SaxionApp.drawImage("BasicGame/BattleArena1.jpg", 0, 0, 1500, 750);
 
-        SaxionApp.drawImage("BasicGame/AB" + arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(0).name + ".png", 130, 640, 100, 100);
-        SaxionApp.drawImage("BasicGame/AB" + arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(1).name + ".png", 250, 640, 100, 100);
-        SaxionApp.drawImage("BasicGame/AB" + arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(2).name + ".png", 395, 640, 100, 100);
+        SaxionApp.drawImage("BasicGame/images/attacks/" + arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(0).name + ".png", 130, 640, 100, 100);
+        SaxionApp.drawImage("BasicGame/images/attacks/" + arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(1).name + ".png", 250, 640, 100, 100);
+        SaxionApp.drawImage("BasicGame/images/attacks/" + arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(2).name + ".png", 370, 640, 100, 100);
 
-        SaxionApp.drawImage("BasicGame/AB" + arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(0).name + ".png", 1260, 640, 100, 100);
-        SaxionApp.drawImage("BasicGame/AB" + arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(1).name + ".png", 1115, 640, 100, 100);
-        SaxionApp.drawImage("BasicGame/AB" + arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(2).name + ".png", 995, 640, 100, 100);
+        SaxionApp.drawImage("BasicGame/images/attacks/" + arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(0).name + ".png", 1270, 640, 100, 100);
+        SaxionApp.drawImage("BasicGame/images/attacks/" + arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(1).name + ".png", 1150, 640, 100, 100);
+        SaxionApp.drawImage("BasicGame/images/attacks/" + arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(2).name + ".png", 1030, 640, 100, 100);
 
         SaxionApp.turnBorderOff();
         SaxionApp.setFill(Color.green);
