@@ -257,6 +257,7 @@ public class BasicGame implements GameLoop {
             currentPositionY = selectorY;
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_SPACE && keyboardEvent.isKeyPressed()) {
             int godId = getGodIdFromSelector();
+            God god = getGodFromDB(godId);
 
             if (godsSelectedPlayer1.size() < 3 && !godsSelectedPlayer1.contains(godId)) {
                 godsSelectedPlayer1.add(godId);
@@ -346,6 +347,28 @@ public class BasicGame implements GameLoop {
         results.close();
         statement.close();
         return player;
+    }
+
+    private God getGodFromDB(int id) throws SQLException {
+        God god = new God();
+
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM god WHERE god_id = ?");
+        statement.setInt(1, id);
+        ResultSet results = statement.executeQuery();
+        while (results.next()) {
+            god = new God();
+            god.id = results.getInt("god_id");
+            god.name = results.getString("name");
+            god.category = results.getString("category");
+            god.elementId = results.getInt("element_id");
+            god.hp = results.getInt("health");
+        }
+        results.close();
+        statement.close();
+
+        god.attacks = getAttacksByGodIdFromDB(god.id);
+
+        return god;
     }
 
     private ArrayList<God> getGodsFromDB(ArrayList<Integer> ids) throws SQLException {
