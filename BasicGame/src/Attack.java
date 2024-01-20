@@ -3,4 +3,5 @@ public class Attack {
     String name;
     int elementId;
     int damage;
+    int healing;
 }

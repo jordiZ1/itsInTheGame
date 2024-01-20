@@ -87,7 +87,7 @@ VALUES
     -- Anhur
     ('Battle Roar', 1, 3, 0),
     ('Rise of Sand', 1, 6, 0),
-    ('Desert Fury', 1, 10, 0), -- Needs dmg buff
+    ('Desert Tsunami', 1, 10, 0), -- Needs dmg buff
 
     -- Anubis
     ('Grave Digger', 1, 5, 0),
