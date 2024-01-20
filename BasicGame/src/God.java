@@ -7,8 +7,5 @@ public class God {
     int elementId;
     int hp;
     ArrayList<Attack> attacks;
-    int abilityDamage1;
-    int abilityDamage2;
-    int abilityDamage3;
 }
 
