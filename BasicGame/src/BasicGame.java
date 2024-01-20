@@ -267,7 +267,6 @@ public class BasicGame implements GameLoop {
             }
 
             godsPlayer1 = getGodsFromDB(godsSelectedPlayer1);
-            System.out.println(godsSelectedPlayer1);
         }
     }
 
@@ -355,28 +354,6 @@ public class BasicGame implements GameLoop {
         return player;
     }
 
-    private God getGodFromDB(int id) throws SQLException {
-        God god = new God();
-
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM god WHERE god_id = ?");
-        statement.setInt(1, id);
-        ResultSet results = statement.executeQuery();
-        while (results.next()) {
-            god = new God();
-            god.id = results.getInt("god_id");
-            god.name = results.getString("name");
-            god.category = results.getString("category");
-            god.elementId = results.getInt("element_id");
-            god.hp = results.getInt("health");
-        }
-        results.close();
-        statement.close();
-
-        god.attacks = getAttacksByGodIdFromDB(god.id);
-
-        return god;
-    }
-
     private ArrayList<God> getGodsFromDB(ArrayList<Integer> ids) {
         ArrayList<God> gods = new ArrayList<>();
 
@@ -459,8 +436,11 @@ public class BasicGame implements GameLoop {
 
         SaxionApp.drawImage("BasicGame/selectPlayer1.png", 65,50,280,100);
 
+        int xPos = 50;
+
         for (God god : godsPlayer1) {
-            SaxionApp.drawImage("BasicGame/images/gods/" + god.name + "FaceLeft.png", 65, 230, 180, 130);
+            SaxionApp.drawImage("BasicGame/images/gods/" + god.name + "FaceLeft.png", xPos, 230, 180, 130);
+            xPos += 160;
         }
     }
 
@@ -469,8 +449,11 @@ public class BasicGame implements GameLoop {
 
         SaxionApp.drawImage("BasicGame/selectPlayer2.png", 65,50,280,100);
 
+        int xPos = 50;
+
         for (God god : godsPlayer2) {
-            SaxionApp.drawImage("BasicGame/images/gods/" + god.name + "FaceLeft.png", 65, 230, 180, 130);
+            SaxionApp.drawImage("BasicGame/images/gods/" + god.name + "FaceLeft.png", xPos, 230, 180, 130);
+            xPos += 160;
         }
     }
 
@@ -494,6 +477,8 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/images/gods/Erlang ShenFaceLeft.png", 1120,587, 180,130);
         SaxionApp.drawImage("BasicGame/images/gods/Guan YuFaceLeft.png", 954,585, 190,136);
         SaxionApp.drawImage("BasicGame/images/gods/He BoFaceLeft.png", 780,588, 180,130);
+
+        SaxionApp.drawText("Selected gods", 65, 150, 50);
     }
 
     private void drawGameBoard() {
