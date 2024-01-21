@@ -58,6 +58,7 @@ public class BasicGame implements GameLoop {
             case "inventoryScreen" -> inventoryScreenLoop();
             case "profileScreen" -> profileScreenLoop();
             case "instructionScreen" -> instructionScreenLoop();
+            case "secondInstructionScreen" -> secondInstructionScreenLoop();
             case "playSelectionScreen" -> playSelectionScreenLoop();
             case "newPlaySelectionScreen" -> newPlaySelectionScreenLoop();
         }
@@ -103,14 +104,22 @@ public class BasicGame implements GameLoop {
 
     public void instructionScreenLoop() {
         SaxionApp.clear();
-        SaxionApp.drawText("instr", 300, 300, 100);
+        drawInstructionScreen();
     }
+
+    public void secondInstructionScreenLoop() {
+        SaxionApp.clear();
+        drawSecondInstructionScreen();
+
+    }
+
 
     public void playSelectionScreenLoop() {
         SaxionApp.clear();
         drawPlaySelectionScreen();
         selector();
     }
+
 
     public void newPlaySelectionScreenLoop() {
         SaxionApp.clear();
@@ -129,14 +138,18 @@ public class BasicGame implements GameLoop {
             case "instructionScreen" -> instructionScreenKeyboardEvent(keyboardEvent);
             case "playSelectionScreen" ->  playSelectionScreenKeyboardEvent(keyboardEvent);
             case "newPlaySelectionScreen" -> newPlaySelectionScreenKeyboardEvent(keyboardEvent);
+            case "secondInstructionScreen" -> secondInstructionScreenKeyboardEvent(keyboardEvent);
         }
     }
+
+
 
     public void startScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_SPACE) {
             currentScreen = "menuScreen";
         }
     }
+
 
     public void menuScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_1) {
@@ -155,18 +168,21 @@ public class BasicGame implements GameLoop {
             if (turnPlayer1) {
                 if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Q) {
                     attackAnimation(1);
+                    SaxionApp.playSound("BasicGame/" + arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(0).audioFileName);
                     arenaPlayers.get(1).gods.get(activeGodPlayer2).hp -= arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(0).damage;
                     arenaPlayers.get(0).gods.get(activeGodPlayer1).hp += arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(0).healing;
                     turnPlayer1 = false;
                     turn++;
                 } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_W) {
                     attackAnimation(1);
+                    SaxionApp.playSound("BasicGame/" + arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(1).audioFileName);
                     arenaPlayers.get(1).gods.get(activeGodPlayer2).hp -= arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(1).damage;
                     arenaPlayers.get(0).gods.get(activeGodPlayer1).hp += arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(1).healing;
                     turnPlayer1 = false;
                     turn++;
                 } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_E) {
                     attackAnimation(1);
+                    SaxionApp.playSound("BasicGame/" + arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(2).audioFileName);
                     arenaPlayers.get(1).gods.get(activeGodPlayer2).hp -= arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(2).damage;
                     arenaPlayers.get(0).gods.get(activeGodPlayer1).hp += arenaPlayers.get(0).gods.get(activeGodPlayer1).attacks.get(2).healing;
                     turnPlayer1 = false;
@@ -187,18 +203,21 @@ public class BasicGame implements GameLoop {
             } else {
                 if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Z) {
                     attackAnimation(2);
+                    SaxionApp.playSound("BasicGame/" + arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(2).audioFileName);
                     arenaPlayers.get(0).gods.get(activeGodPlayer1).hp -= arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(0).damage;
                     arenaPlayers.get(1).gods.get(activeGodPlayer2).hp += arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(0).healing;
                     turnPlayer1 = true;
                     turn++;
                 } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_X) {
                     attackAnimation(2);
+                    SaxionApp.playSound("BasicGame/" + arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(1).audioFileName);
                     arenaPlayers.get(0).gods.get(activeGodPlayer1).hp -= arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(1).damage;
                     arenaPlayers.get(1).gods.get(activeGodPlayer2).hp += arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(1).healing;
                     turnPlayer1 = true;
                     turn++;
                 } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_C) {
                     attackAnimation(2);
+                    SaxionApp.playSound("BasicGame/" + arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(0).audioFileName);
                     arenaPlayers.get(0).gods.get(activeGodPlayer1).hp -= arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(2).damage;
                     arenaPlayers.get(1).gods.get(activeGodPlayer2).hp += arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(2).healing;
                     turnPlayer1 = true;
@@ -235,6 +254,14 @@ public class BasicGame implements GameLoop {
     public void instructionScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_RIGHT) {
+            currentScreen = "secondInstructionScreen";
+        }
+    }
+
+    public void secondInstructionScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
+        if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_LEFT) {
+            currentScreen = "instructionScreen";
         }
     }
 
@@ -269,7 +296,6 @@ public class BasicGame implements GameLoop {
             godsPlayer1 = getGodsFromDB(godsSelectedPlayer1);
         }
     }
-
     public void newPlaySelectionScreenKeyboardEvent (KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
@@ -401,6 +427,7 @@ public class BasicGame implements GameLoop {
             attack.elementId = results.getInt("element_id");
             attack.damage = results.getInt("base_damage");
             attack.healing = results.getInt("healing");
+            attack.audioFileName = results.getString("sound_file_name");
             attacks.add(attack);
         }
         results.close();
@@ -429,6 +456,56 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/menubackground.jpg", 0, 0, 1500, 750);
         SaxionApp.drawImage("BasicGame/botg.png", 250, 50);
         SaxionApp.drawImage("BasicGame/menuoptions.png", 50, 250);
+    }
+
+    private void drawInstructionScreen () {
+        SaxionApp.clear();
+        SaxionApp.setBackgroundColor(Color.black);
+        SaxionApp.drawImage("BasicGame/instructionText.png",425,25,630,135);
+        SaxionApp.drawImage("BasicGame/explanationText.png",40,300,600,330);
+        SaxionApp.drawImage("BasicGame/elementCounterText.png",1000,300,400,30);
+        SaxionApp.drawImage("BasicGame/countersText.png",1080,350,230,250);
+    }
+
+    private void drawSecondInstructionScreen () {
+        SaxionApp.clear();
+        SaxionApp.setTextDrawingColor(Color.white);
+        SaxionApp.drawImage("BasicGame/images/gods/AchillesFaceLeft.png", 40,20, 170,140);
+        SaxionApp.drawImage("BasicGame/images/attacks/Spear Throw.png",25,155,40,40);
+        SaxionApp.drawImage("BasicGame/images/attacks/shield Bash.png",100,155,40,40);
+        SaxionApp.drawImage("BasicGame/images/attacks/scorpion Slash.png",175,155,40,40);
+
+        SaxionApp.drawText("spear attack",17,200,11);
+        SaxionApp.drawText("(fire) (5)",22,215,11);
+        SaxionApp.drawText("shield bash",92,200,11);
+        SaxionApp.drawText("(earth) (3)",97,215,11);
+        SaxionApp.drawText("scorpion slash",165,200,11);
+        SaxionApp.drawText("(fire) (10)",173,215,11);
+
+        SaxionApp.drawImage("BasicGame/images/gods/AresFaceLeft.png", 260,20, 240,140);
+        SaxionApp.drawImage("BasicGame/images/attacks/Spear Throw.png",302,155,40,40);
+        SaxionApp.drawImage("BasicGame/images/attacks/shield Bash.png",377,155,40,40);
+        SaxionApp.drawImage("BasicGame/images/attacks/battle Call.png",452,155,40,40);
+
+        SaxionApp.drawText("spear attack",291,200,11);
+        SaxionApp.drawText("(fire) (5)",295,215,11);
+        SaxionApp.drawText("shield bash",370,200,11);
+        SaxionApp.drawText("(earth) (3)",370,215,11);
+        SaxionApp.drawText("battle call",450,200,11);
+        SaxionApp.drawText("(basic) (10)",447,215,11);
+
+        SaxionApp.drawImage("BasicGame/images/gods/AtlasFaceLeft.png", 600,20,240,140);
+        SaxionApp.drawImage("BasicGame/images/attacks/Shoulder Press.png",550,155,40,40);
+
+
+
+
+
+
+
+
+
+
     }
 
     private void drawPlaySelectionScreen () {
@@ -480,6 +557,7 @@ public class BasicGame implements GameLoop {
 
         SaxionApp.drawText("Selected gods", 65, 150, 50);
     }
+
 
     private void drawGameBoard() {
         SaxionApp.clear();
