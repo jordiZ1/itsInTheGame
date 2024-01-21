@@ -4,7 +4,7 @@ public class God {
     int id;
     String name;
     String category;
-    int elementId;
+    String element;
     int hp;
     ArrayList<Attack> attacks;
 }

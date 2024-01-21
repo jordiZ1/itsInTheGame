@@ -1,7 +1,7 @@
 public class Attack {
     int id;
     String name;
-    int elementId;
+    String element;
     int damage;
     int healing;
 }
