@@ -51,7 +51,7 @@ VALUES
     ('player4');
 
 INSERT INTO attack
-    (name, element_id, base_damage, healing, sound_file_name)
+    (name, element, base_damage, healing, sound_file_name)
 VALUES
     -- Achilles
     ('Spear Throw', 'fire', 5, 0,'SOspearSound.wav'),
