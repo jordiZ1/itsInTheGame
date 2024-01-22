@@ -95,7 +95,7 @@ public class BasicGame implements GameLoop {
                 winnerGame = 0;
             }
 
-            SaxionApp.drawBorderedText("Press ENTER to continue...", 550, 500, 50);
+            SaxionApp.drawBorderedText("Press ENTER to continue...", 500, 500, 50);
         }
     }
 
