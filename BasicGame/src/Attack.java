@@ -4,4 +4,6 @@ public class Attack {
     String element;
     int damage;
     int healing;
+
+    String audioFileName;
 }
