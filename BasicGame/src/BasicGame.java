@@ -245,7 +245,7 @@ public class BasicGame implements GameLoop {
                     turn++;
                 } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_C && arenaPlayers.get(1).gods.get(activeGodPlayer2).hp > 0) {
                     attackAnimation(2);
-                    SaxionApp.playSound("BasicGame/" + arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(0).audioFileName)
+                    SaxionApp.playSound("BasicGame/" + arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(0).audioFileName);
                     int baseDamage = arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(2).damage;
                     int counterBonus = getGodCounter(arenaPlayers.get(1).gods.get(activeGodPlayer2).attacks.get(2), arenaPlayers.get(0).gods.get(activeGodPlayer1));
                     arenaPlayers.get(0).gods.get(activeGodPlayer1).hp -= baseDamage * counterBonus;
