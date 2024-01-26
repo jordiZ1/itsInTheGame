@@ -51,87 +51,87 @@ VALUES
     ('player4');
 
 INSERT INTO attack
-    (name, element_id, base_damage, healing, sound_file_name)
+    (name, element, base_damage, healing, sound_file_name)
 VALUES
     -- Achilles
-    ('Spear Throw', 'fire', 5, 0,'SOspearSound.wav'),
-    ('Shield Bash', 'earth', 3, 0,'SOshieldBash.wav'),
-    ('Scorpion Slash', 'earth', 10, 0,'SOscorpionSlash.wav' ),
+    ('Spear Throw', 'fire', 15, 0,'SOspearSound.wav'),
+    ('Shield Bash', 'earth', 13, 0,'SOshieldBash.wav'),
+    ('Scorpion Slash', 'earth', 20, 0,'SOscorpionSlash.wav' ),
 
     -- Ares
     -- Spear Throw
     -- Shield Bash
-    ('Battle Call', 'earth', 8, 0,'SObattleCall.wav' ),
+    ('Battle Call', 'earth', 18, 0,'SObattleCall.wav' ),
 
     -- Atlas
-    ('Shoulder Press', 'basic', 3, 0,'SOelbowPunch.wav'),
-    ('Cloud Blow', 'earth', 6, 0,'SOkick.wav'),
-    ('Star Shower', 'light', 12, 0,'SOstarPunch.wav'),
+    ('Shoulder Press', 'basic', 13, 0,'SOelbowPunch.wav'),
+    ('Cloud Blow', 'earth', 16, 0,'SOkick.wav'),
+    ('Star Shower', 'light', 22, 0,'SOstarPunch.wav'),
 
     -- Apollo
-    ('Arrow of Agreus', 'basic', 4, 0,'SOarrowOfAgreus.wav'),
-    ('Symphony of Strings', 'light', 7, 0,'SOsymphonyOfStrings.wav'),
+    ('Arrow of Agreus', 'basic', 14, 0,'SOarrowOfAgreus.wav'),
+    ('Symphony of Strings', 'light', 17, 0,'SOsymphonyOfStrings.wav'),
     ('Healing Truth', 'basic', 0, 15,'SOhealingTruth.wav'),
 
     -- Anhur
-    ('Battle Roar', 'basic', 3, 0,'SObattleRoar.wav'),
-    ('Rise of Sand', 'earth', 6, 0,'SOriseOfSand.wav'),
-    ('Desert Tsunami', 'earth', 10, 0,'SOdesertTsunami.wav'), -- Needs dmg buff
+    ('Battle Roar', 'basic', 13, 0,'SObattleRoar.wav'),
+    ('Rise of Sand', 'earth', 16, 0,'SOriseOfSand.wav'),
+    ('Desert Tsunami', 'earth', 20, 0,'SOdesertTsunami.wav'), -- Needs dmg buff
 
     -- Anubis
-    ('Grave Digger', 'earth', 5, 0,'SOgraveDigger.wav'),
-    ('Harvest', 'darkness', 4, 0,'SOharvest.wav'),
-    ('Hellraiser', 'fire', 12, 0,'SOhellraiser.wav'),
+    ('Grave Digger', 'earth', 15, 0,'SOgraveDigger.wav'),
+    ('Harvest', 'darkness', 14, 0,'SOharvest.wav'),
+    ('Hellraiser', 'fire', 22, 0,'SOhellraiser.wav'),
 
     -- Sobek
-    ('March of Pharos', 'earth', 7, 0,'SOmarchOfPharaohs.wav'),
-    ('Bite of the Nile', 'water', 3, 0,'SObiteOfNile.wav'),
-    ('Desert Tsunami', 'earth', 9, 0,'SOdesertTsunami.wav'),
+    ('March of Pharos', 'earth', 17, 0,'SOmarchOfPharaohs.wav'),
+    ('Bite of the Nile', 'water', 13, 0,'SObiteOfNile.wav'),
+    ('Desert Tsunami', 'earth', 19, 0,'SOdesertTsunami.wav'),
 
     -- Horus
-    ('Skyfall', 'light', 5, 0,'SOskyfall.wav'),
-    ('Light of the Throne', 'light', 0, 5,'SOlightOfTheThrone.wav'),
+    ('Skyfall', 'light', 15, 0,'SOskyfall.wav'),
+    ('Light of the Throne', 'light', 0, 10,'SOlightOfTheThrone.wav'),
     ('Sky Splitter', 'earth', 20, 0,'SOskySplitter.wav'),
 
     -- Odin
-    ('Raven Attack', 'darkness', 3, 0,'SOravenAttack.wav'),
-    ('Staff of Death', 'earth', 6, 0,'SOstaffOfDeath.wav'),
+    ('Raven Attack', 'darkness', 13, 0,'SOravenAttack.wav'),
+    ('Staff of Death', 'earth', 16, 0,'SOstaffOfDeath.wav'),
     ('Tree of Wisdom', 'earth', 30, -30,'SOtreeOfWisdom.wav'),
 
     -- Thor
-    ('Hammer Fall', 'basic', 5, 0,'SOhammerFall.wav'),
-    ('Lightning of Gods', 'light', 8, 0,'SOlightningOfTheGods.wav'),
-    ('Hammer Storm', 'light', 12, 0,'SOhammerStorm.wav'),
+    ('Hammer Fall', 'basic', 15, 0,'SOhammerFall.wav'),
+    ('Lightning of Gods', 'light', 18, 0,'SOlightningOfTheGods.wav'),
+    ('Hammer Storm', 'light', 22, 0,'SOhammerStorm.wav'),
     
     -- Tyr
-    ('Battle Cry', 'basic', 4, 0,'SObattleCry.wav'),
-    ('Sun Eater', 'fire', 3, 0,'SOwaveBender.wav'), -- Needs dmg stacks
-    ('Sword of Victory', 'fire', 5, 0,'SOswordOfVictory.wav'), -- Needs stack gaining
+    ('Battle Cry', 'basic', 14, 0,'SObattleCry.wav'),
+    ('Sun Eater', 'fire', 13, 0,'SOwaveBender.wav'), -- Needs dmg stacks
+    ('Sword of Victory', 'fire', 15, 0,'SOswordOfVictory.wav'), -- Needs stack gaining
 
     -- Ullr
-    ('Swift Arrow', 'basic', 4, 0,'SOswiftArrow.wav'),
-    ('Freezing Axe', 'water', 8, 0,'SOfreezingAxe.wav'),
-    ('Fury of Snow', 'earth', 15, 0,'SOfuryOfSnow.wav'),
+    ('Swift Arrow', 'basic', 14, 0,'SOswiftArrow.wav'),
+    ('Freezing Axe', 'water', 18, 0,'SOfreezingAxe.wav'),
+    ('Fury of Snow', 'earth', 25, 0,'SOfuryOfSnow.wav'),
 
     -- Ao Kuang
-    ('Dragon Breath', 'fire', 5, 0,'SOdragonBreath.wav'),
-    ('Drought Storm', 'fire', 8, 0,'SOdroughtStorm.wav'),
-    ('Ruler of Dragons', 'fire', 12, 0,'SOspearSound.wav'),
+    ('Dragon Breath', 'fire', 15, 0,'SOdragonBreath.wav'),
+    ('Drought Storm', 'fire', 18, 0,'SOdroughtStorm.wav'),
+    ('Ruler of Dragons', 'fire', 22, 0,'SOspearSound.wav'),
 
     -- Erlang Shen
-    ('Spear of Strength', 'basic', 3, 0,'SOspearOfStrength.wav'),
-    ('Tiger Slayer', 'earth', 7, 0,'SOTigerSlayer.wav'),
-    ('Duel to the Death', 'earth', 10, 0,'SOduelToTheDeath.wavv'),
+    ('Spear of Strength', 'basic', 13, 0,'SOspearOfStrength.wav'),
+    ('Tiger Slayer', 'earth', 17, 0,'SOTigerSlayer.wav'),
+    ('Duel to the Death', 'earth', 20, 0,'SOduelToTheDeath.wavv'),
 
     -- Guan Yu
-    ('Cavalry', 'basic', 0, 1,'SOcavalry.wav'), -- Needs stack gaining
-    ('Assault', 'light', 8, 0,'SOassault.wav'),
-    ('Battle Charge', 'light', 2, 0,'SObattleCharge.wav'), -- Needs dmg stacks
+    ('Cavalry', 'basic', 15, 1,'SOcavalry.wav'), -- Needs stack gaining
+    ('Assault', 'light', 18, 0,'SOassault.wav'),
+    ('Battle Charge', 'light', 22, 0,'SObattleCharge.wav'), -- Needs dmg stacks
 
     -- He Bo
-    ('wave Bender', 'water', 3, 0,'SOwaveBender.wav'),
-    ('River Flow', 'water', 5, 0,'SOriverFlow.wav'),
-    ('Rise of Tides', 'water', 15, 0,'SOriseOfTides.wav');
+    ('wave Bender', 'water', 13, 0,'SOwaveBender.wav'),
+    ('River Flow', 'water', 15, 0,'SOriverFlow.wav'),
+    ('Rise of Tides', 'water', 25, 0,'SOriseOfTides.wav');
 
 INSERT INTO god
     (name, category, element, health)

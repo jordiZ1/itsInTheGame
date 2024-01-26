@@ -5,6 +5,7 @@ import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 
 import java.awt.*;
+import java.security.Key;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -58,6 +59,7 @@ public class BasicGame implements GameLoop {
             case "battleScreen" -> battleScreenLoop();
             case "menuScreen" -> menuScreenLoop();
             case "inventoryScreen" -> inventoryScreenLoop();
+            case "inventoryScreen2" -> inventoryScreen2Loop();
             case "profileScreen" -> profileScreenLoop();
             case "instructionScreen" -> instructionScreenLoop();
             case "secondInstructionScreen" -> secondInstructionScreenLoop();
@@ -96,7 +98,7 @@ public class BasicGame implements GameLoop {
                 winnerGame = 0;
             }
 
-            SaxionApp.drawBorderedText("Press ENTER to continue...", 550, 500, 50);
+            SaxionApp.drawBorderedText("Press ENTER to continue...", 500, 500, 50);
         }
     }
 
@@ -107,9 +109,7 @@ public class BasicGame implements GameLoop {
 
     public void inventoryScreenLoop() {
         SaxionApp.clear();
-        SaxionApp.drawImage("BasicGame/background endscreen.jpg", 0, 0, 1500, 750);
-        SaxionApp.setFill(Color.yellow);
-        SaxionApp.drawBorderedText("Coming Soon...", 450, 350, 100);
+        drawInventoryScreen1();
     }
 
     public void profileScreenLoop() {
@@ -151,6 +151,7 @@ public class BasicGame implements GameLoop {
             case "battleScreen" -> battleScreenKeyboardEvent(keyboardEvent);
             case "startScreen" -> startScreenKeyboardEvent(keyboardEvent);
             case "inventoryScreen" -> inventoryScreenKeyboardEvent(keyboardEvent);
+            case "inventoryScreen2" -> inventoryScreen2KeyboardEvent(keyboardEvent);
             case "profileScreen" -> profileScreenKeyboardEvent(keyboardEvent);
             case "instructionScreen" -> instructionScreenKeyboardEvent(keyboardEvent);
             case "playSelectionScreen" -> playSelectionScreenKeyboardEvent(keyboardEvent);
@@ -159,7 +160,6 @@ public class BasicGame implements GameLoop {
             case "endScreen" -> endScreenKeyboardEvent(keyboardEvent);
         }
     }
-
 
 
     public void startScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
@@ -183,6 +183,9 @@ public class BasicGame implements GameLoop {
 
     public void battleScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (gameActive) {
+            if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_O) {
+                currentScreen = "inventoryScreen";
+            }
             if (turnPlayer1) {
                 if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Q && arenaPlayers.get(0).gods.get(activeGodPlayer1).hp > 0) {
                     attackAnimation(1);
@@ -266,8 +269,8 @@ public class BasicGame implements GameLoop {
                     turn++;
                 }
             }
-        }
 
+        }
         if (!gameActive && keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER) {
             currentScreen = "endScreen";
         }
@@ -286,8 +289,13 @@ public class BasicGame implements GameLoop {
     public void inventoryScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_RIGHT) {
+            currentScreen = "inventoryScreen2";
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_P) {
+            currentScreen = "battleScreen";
         }
     }
+
 
     public void profileScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
@@ -341,6 +349,7 @@ public class BasicGame implements GameLoop {
             godsPlayer1 = getGodsFromDB(godsSelectedPlayer1);
         }
     }
+
     public void newPlaySelectionScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
             currentScreen = "menuScreen";
@@ -529,45 +538,45 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawImage("BasicGame/menuoptions.png", 50, 250);
     }
 
-  
-    private void drawInstructionScreen () {
+
+    private void drawInstructionScreen() {
         SaxionApp.clear();
         SaxionApp.setBackgroundColor(Color.black);
-        SaxionApp.drawImage("BasicGame/instructionText.png",425,25,630,135);
-        SaxionApp.drawImage("BasicGame/explanationText.png",40,300,600,330);
-        SaxionApp.drawImage("BasicGame/elementCounterText.png",1000,300,400,30);
-        SaxionApp.drawImage("BasicGame/countersText.png",1080,350,230,250);
+        SaxionApp.drawImage("BasicGame/instructionText.png", 425, 25, 630, 135);
+        SaxionApp.drawImage("BasicGame/explanationText.png", 40, 300, 600, 330);
+        SaxionApp.drawImage("BasicGame/elementCounterText.png", 1000, 300, 400, 30);
+        SaxionApp.drawImage("BasicGame/countersText.png", 1080, 350, 230, 250);
     }
 
-    private void drawSecondInstructionScreen () {
+    private void drawSecondInstructionScreen() {
         SaxionApp.clear();
         SaxionApp.setTextDrawingColor(Color.white);
-        SaxionApp.drawImage("BasicGame/images/gods/AchillesFaceLeft.png", 40,20, 170,140);
-        SaxionApp.drawImage("BasicGame/images/attacks/Spear Throw.png",25,155,40,40);
-        SaxionApp.drawImage("BasicGame/images/attacks/shield Bash.png",100,155,40,40);
-        SaxionApp.drawImage("BasicGame/images/attacks/scorpion Slash.png",175,155,40,40);
+        SaxionApp.drawImage("BasicGame/images/gods/AchillesFaceLeft.png", 40, 20, 170, 140);
+        SaxionApp.drawImage("BasicGame/images/attacks/Spear Throw.png", 25, 155, 40, 40);
+        SaxionApp.drawImage("BasicGame/images/attacks/shield Bash.png", 100, 155, 40, 40);
+        SaxionApp.drawImage("BasicGame/images/attacks/scorpion Slash.png", 175, 155, 40, 40);
 
-        SaxionApp.drawText("spear attack",17,200,11);
-        SaxionApp.drawText("(fire) (5)",22,215,11);
-        SaxionApp.drawText("shield bash",92,200,11);
-        SaxionApp.drawText("(earth) (3)",97,215,11);
-        SaxionApp.drawText("scorpion slash",165,200,11);
-        SaxionApp.drawText("(fire) (10)",173,215,11);
+        SaxionApp.drawText("spear attack", 17, 200, 11);
+        SaxionApp.drawText("(fire) (5)", 22, 215, 11);
+        SaxionApp.drawText("shield bash", 92, 200, 11);
+        SaxionApp.drawText("(earth) (3)", 97, 215, 11);
+        SaxionApp.drawText("scorpion slash", 165, 200, 11);
+        SaxionApp.drawText("(fire) (10)", 173, 215, 11);
 
-        SaxionApp.drawImage("BasicGame/images/gods/AresFaceLeft.png", 260,20, 240,140);
-        SaxionApp.drawImage("BasicGame/images/attacks/Spear Throw.png",302,155,40,40);
-        SaxionApp.drawImage("BasicGame/images/attacks/shield Bash.png",377,155,40,40);
-        SaxionApp.drawImage("BasicGame/images/attacks/battle Call.png",452,155,40,40);
+        SaxionApp.drawImage("BasicGame/images/gods/AresFaceLeft.png", 260, 20, 240, 140);
+        SaxionApp.drawImage("BasicGame/images/attacks/Spear Throw.png", 302, 155, 40, 40);
+        SaxionApp.drawImage("BasicGame/images/attacks/shield Bash.png", 377, 155, 40, 40);
+        SaxionApp.drawImage("BasicGame/images/attacks/battle Call.png", 452, 155, 40, 40);
 
-        SaxionApp.drawText("spear attack",291,200,11);
-        SaxionApp.drawText("(fire) (5)",295,215,11);
-        SaxionApp.drawText("shield bash",370,200,11);
-        SaxionApp.drawText("(earth) (3)",370,215,11);
-        SaxionApp.drawText("battle call",450,200,11);
-        SaxionApp.drawText("(basic) (10)",447,215,11);
+        SaxionApp.drawText("spear attack", 291, 200, 11);
+        SaxionApp.drawText("(fire) (5)", 295, 215, 11);
+        SaxionApp.drawText("shield bash", 370, 200, 11);
+        SaxionApp.drawText("(earth) (3)", 370, 215, 11);
+        SaxionApp.drawText("battle call", 450, 200, 11);
+        SaxionApp.drawText("(basic) (10)", 447, 215, 11);
 
-        SaxionApp.drawImage("BasicGame/images/gods/AtlasFaceLeft.png", 600,20,240,140);
-        SaxionApp.drawImage("BasicGame/images/attacks/Shoulder Press.png",550,155,40,40);
+        SaxionApp.drawImage("BasicGame/images/gods/AtlasFaceLeft.png", 600, 20, 240, 140);
+        SaxionApp.drawImage("BasicGame/images/attacks/Shoulder Press.png", 550, 155, 40, 40);
     }
 
     private void drawPlaySelectionScreen() {
@@ -712,7 +721,28 @@ public class BasicGame implements GameLoop {
         SaxionApp.drawRectangle(selectorX, selectorY, 60, 10);
     }
 
+    public void drawInventoryScreen1() {
+        SaxionApp.drawImage("BasicGame/inventoryScreen1.png", 0, -10, 1500, 830);
+    }
+
+    public void drawInventoryScreen2() {
+        SaxionApp.drawImage("BasicGame/inventoryScreen2.png", 0, -10, 1500, 830);
+    }
+
+    public void inventoryScreen2Loop() {
+        SaxionApp.clear();
+        drawInventoryScreen2();
+    }
+
+    public void inventoryScreen2KeyboardEvent(KeyboardEvent keyboardEvent) {
+        if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_LEFT) {
+            currentScreen = "inventoryScreen";
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_ESCAPE) {
+            currentScreen = "menuScreen";
+        }
+    }
     @Override
-    public void mouseEvent(MouseEvent mouseEvent) {
+    public void mouseEvent (MouseEvent mouseEvent){
+
     }
 }
