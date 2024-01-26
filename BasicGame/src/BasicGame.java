@@ -5,6 +5,7 @@ import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 
 import java.awt.*;
+import java.security.Key;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -182,6 +183,9 @@ public class BasicGame implements GameLoop {
 
     public void battleScreenKeyboardEvent(KeyboardEvent keyboardEvent) {
         if (gameActive) {
+            if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_O) {
+                currentScreen = "inventoryScreen";
+            }
             if (turnPlayer1) {
                 if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_Q && arenaPlayers.get(0).gods.get(activeGodPlayer1).hp > 0) {
                     attackAnimation(1);
@@ -265,8 +269,8 @@ public class BasicGame implements GameLoop {
                     turn++;
                 }
             }
-        }
 
+        }
         if (!gameActive && keyboardEvent.getKeyCode() == KeyboardEvent.VK_ENTER) {
             currentScreen = "endScreen";
         }
@@ -287,6 +291,8 @@ public class BasicGame implements GameLoop {
             currentScreen = "menuScreen";
         } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_RIGHT) {
             currentScreen = "inventoryScreen2";
+        } else if (keyboardEvent.getKeyCode() == KeyboardEvent.VK_P) {
+            currentScreen = "battleScreen";
         }
     }
 
