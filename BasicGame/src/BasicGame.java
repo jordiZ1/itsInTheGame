@@ -5,7 +5,6 @@ import nl.saxion.app.interaction.KeyboardEvent;
 import nl.saxion.app.interaction.MouseEvent;
 
 import java.awt.*;
-import java.security.Key;
 import java.sql.*;
 import java.util.ArrayList;
 
